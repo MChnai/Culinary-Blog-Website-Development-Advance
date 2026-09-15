@@ -1,0 +1,6 @@
+{
+  "name": "Culinary Blog & Recipe Management",
+  "description": "Nền tảng Quản lý và Chia sẻ Công thức Ẩm thực theo đặc tả SRS .NET 10 Minimal APIs & Next.js App Router với PostgreSQL 16",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
