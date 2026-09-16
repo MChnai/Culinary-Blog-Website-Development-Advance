@@ -15,24 +15,24 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect, showSt
   const getDifficultyLabel = (level: RecipeDifficulty) => {
     switch (level) {
       case RecipeDifficulty.Easy:
-        return { text: 'Dễ làm', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
+        return { text: 'Easy', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' };
       case RecipeDifficulty.Medium:
-        return { text: 'Trung bình', color: 'bg-amber-50 text-amber-700 border-amber-200' };
+        return { text: 'Medium', color: 'bg-amber-50 text-amber-700 border-amber-200' };
       case RecipeDifficulty.Hard:
-        return { text: 'Nâng cao', color: 'bg-orange-50 text-orange-700 border-orange-200' };
+        return { text: 'Hard', color: 'bg-orange-50 text-orange-700 border-orange-200' };
       case RecipeDifficulty.Expert:
-        return { text: 'Chuyên nghiệp', color: 'bg-rose-50 text-rose-700 border-rose-200' };
+        return { text: 'Expert', color: 'bg-rose-50 text-rose-700 border-rose-200' };
     }
   };
 
   const getStatusLabel = (status: RecipeStatus) => {
     switch (status) {
       case RecipeStatus.Published:
-        return { text: 'Đã xuất bản', color: 'bg-emerald-500 text-white' };
+        return { text: 'Published', color: 'bg-emerald-500 text-white' };
       case RecipeStatus.Draft:
-        return { text: 'Bản thảo', color: 'bg-stone-600 text-white' };
+        return { text: 'Draft', color: 'bg-stone-600 text-white' };
       case RecipeStatus.Archived:
-        return { text: 'Lưu trữ', color: 'bg-amber-700 text-white' };
+        return { text: 'Archived', color: 'bg-amber-700 text-white' };
     }
   };
 
@@ -82,7 +82,7 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect, showSt
             <span className="text-xs text-stone-400">•</span>
             <span className="text-xs text-stone-500 flex items-center gap-1">
               <Clock className="w-3 h-3 text-stone-400" />
-              {recipe.prepTime + recipe.cookTime} phút
+              {recipe.prepTime + recipe.cookTime} mins
             </span>
           </div>
 
@@ -110,19 +110,19 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect, showSt
               </div>
             )}
             <span className="font-medium truncate max-w-[110px] sm:max-w-[140px]">
-              {recipe.author?.displayName || 'Tác giả'}
+              {recipe.author?.displayName || 'Author'}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1 text-stone-600 font-mono text-[11px]">
               <Users className="w-3 h-3 text-stone-400" />
-              {recipe.servings} phần
+              {recipe.servings} servings
             </span>
             {recipe.steps?.length > 0 && (
               <span className="flex items-center gap-1 text-stone-600 font-mono text-[11px]">
                 <BookOpen className="w-3 h-3 text-stone-400" />
-                {recipe.steps.length} bước
+                {recipe.steps.length} steps
               </span>
             )}
           </div>

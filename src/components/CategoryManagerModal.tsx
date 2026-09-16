@@ -48,7 +48,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
     setSuccessMsg(null);
 
     if (!name || name.trim().length < 2) {
-      setErrorMsg('Tên danh mục phải có ít nhất 2 ký tự.');
+      setErrorMsg('Category name must have at least 2 characters.');
       return;
     }
 
@@ -57,7 +57,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
       if (res.error) {
         setErrorMsg(res.error.detail);
       } else {
-        setSuccessMsg(`Cập nhật danh mục '${name}' thành công.`);
+        setSuccessMsg(`Successfully updated category '${name}'.`);
         resetForm();
       }
     } else {
@@ -65,7 +65,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
       if (res.error) {
         setErrorMsg(res.error.detail);
       } else {
-        setSuccessMsg(`Tạo danh mục mới '${name}' (slug: ${slugify(name)}) thành công.`);
+        setSuccessMsg(`Successfully created category '${name}' (slug: ${slugify(name)}).`);
         resetForm();
       }
     }
@@ -78,7 +78,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
     if (!res.success && res.error) {
       setErrorMsg(res.error.detail);
     } else {
-      setSuccessMsg(`Đã xóa danh mục '${cat.name}'.`);
+      setSuccessMsg(`Deleted category '${cat.name}'.`);
     }
   };
 
@@ -93,10 +93,10 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
             </div>
             <div>
               <h2 className="text-lg font-bold font-serif text-stone-900">
-                Quản lý Danh mục (FR-CAT)
+                Category Management (FR-CAT)
               </h2>
               <p className="text-xs text-stone-500">
-                Quyền hạn: Admin | .NET 10 IMemoryCache TTL 60m Invalidation
+                Permission: Admin | .NET 10 IMemoryCache TTL 60m Invalidation
               </p>
             </div>
           </div>
@@ -128,15 +128,15 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
           {/* Add / Edit Form */}
           <form onSubmit={handleSave} className="bg-stone-50 p-4 rounded-xl border border-stone-200 space-y-3">
             <h3 className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-              {editingCategory ? `Chỉnh sửa: ${editingCategory.name}` : 'Thêm Danh mục Mới (FR-CAT-003)'}
+              {editingCategory ? `Edit: ${editingCategory.name}` : 'Add New Category (FR-CAT-003)'}
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-stone-600 mb-1">Tên danh mục *</label>
+                <label className="block text-xs text-stone-600 mb-1">Category Name *</label>
                 <input
                   type="text"
-                  placeholder="Ví dụ: Món Nướng BBQ"
+                  placeholder="e.g., Traditional Soups & Broths"
                   value={name}
                   onChange={e => setName(e.target.value)}
                   className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs focus:ring-1 focus:ring-amber-500"
@@ -144,22 +144,22 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs text-stone-600 mb-1">Slug dự kiến (Tự động sinh)</label>
+                <label className="block text-xs text-stone-600 mb-1">Generated Slug (Auto-slugify)</label>
                 <input
                   type="text"
                   readOnly
                   disabled
-                  value={editingCategory ? editingCategory.slug : slugify(name) || 'mon-an'}
+                  value={editingCategory ? editingCategory.slug : slugify(name) || 'category'}
                   className="w-full px-3 py-1.5 bg-stone-100 border border-stone-200 rounded-lg text-xs text-stone-500 font-mono"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-stone-600 mb-1">Mô tả ngắn</label>
+              <label className="block text-xs text-stone-600 mb-1">Short Description</label>
               <input
                 type="text"
-                placeholder="Mô tả tóm tắt danh mục ẩm thực..."
+                placeholder="Summary of culinary category..."
                 value={description}
                 onChange={e => setDescription(e.target.value)}
                 className="w-full px-3 py-1.5 bg-white border border-stone-300 rounded-lg text-xs focus:ring-1 focus:ring-amber-500"
@@ -173,14 +173,14 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                   onClick={resetForm}
                   className="px-3 py-1.5 border border-stone-300 hover:bg-white text-stone-600 rounded-lg text-xs cursor-pointer"
                 >
-                  Hủy
+                  Cancel
                 </button>
               )}
               <button
                 type="submit"
                 className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs"
               >
-                {editingCategory ? 'Lưu thay đổi' : <><Plus className="w-3.5 h-3.5" /> Tạo danh mục</>}
+                {editingCategory ? 'Save Changes' : <><Plus className="w-3.5 h-3.5" /> Create Category</>}
               </button>
             </div>
           </form>
@@ -188,7 +188,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
           {/* List of current categories */}
           <div className="space-y-2">
             <h3 className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-              Danh sách hiện có ({categories.length})
+              Existing Categories ({categories.length})
             </h3>
 
             <div className="divide-y divide-stone-100 border border-stone-200 rounded-xl overflow-hidden">
@@ -210,19 +210,19 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                         <span className="font-semibold text-stone-900 text-sm">{cat.name}</span>
                         <span className="font-mono text-[11px] text-stone-400">/{cat.slug}</span>
                       </div>
-                      <p className="text-xs text-stone-500">{cat.description || 'Không có mô tả'}</p>
+                      <p className="text-xs text-stone-500">{cat.description || 'No description provided'}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <span className="text-xs px-2 py-0.5 rounded-full bg-stone-100 text-stone-700 font-mono font-medium">
-                      {cat.recipeCount || 0} món
+                      {cat.recipeCount || 0} recipes
                     </span>
 
                     <button
                       onClick={() => startEdit(cat)}
                       className="p-1.5 text-stone-400 hover:text-amber-600 hover:bg-stone-100 rounded-lg transition-colors cursor-pointer"
-                      title="Chỉnh sửa"
+                      title="Edit category"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
@@ -230,7 +230,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                     <button
                       onClick={() => handleDelete(cat)}
                       className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                      title="Xóa danh mục (ràng buộc không còn recipes)"
+                      title="Delete category (requires no associated recipes)"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

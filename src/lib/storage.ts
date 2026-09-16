@@ -125,22 +125,22 @@ class DatabaseEngine {
         jobName: 'SitemapGenerationJob (FR-JOB-003)',
         type: 'Recurring',
         status: 'Succeeded',
-        triggerReason: 'Cron "0 2 * * *" (Hàng ngày lúc 02:00 AM UTC)',
+        triggerReason: 'Cron "0 2 * * *" (Daily at 02:00 AM UTC)',
         createdAt: '2026-09-15T02:00:00Z',
         executedAt: '2026-09-15T02:00:05Z',
         retryCount: 0,
-        details: 'Đã tạo sitemap.xml với 6 recipes đã publish và 5 categories.',
+        details: 'Generated sitemap.xml with 6 published recipes and 5 categories.',
       },
       {
         id: 'job-002',
         jobName: 'WelcomeEmailJob (FR-JOB-001)',
         type: 'Fire-and-forget',
         status: 'Succeeded',
-        triggerReason: 'User registered: chef.nguyen@culinaryblog.vn',
+        triggerReason: 'User registered: chef.nguyen@culinaryblog.com',
         createdAt: '2026-01-15T10:30:00Z',
         executedAt: '2026-01-15T10:30:02Z',
         retryCount: 0,
-        details: 'Gửi email chào mừng kích hoạt tài khoản thành công qua MailKit.',
+        details: 'Sent account activation and welcome email via MailKit SMTP.',
       },
       {
         id: 'job-003',
@@ -151,7 +151,7 @@ class DatabaseEngine {
         createdAt: '2026-02-10T09:05:00Z',
         executedAt: '2026-02-10T09:05:03Z',
         retryCount: 0,
-        details: 'Sinh 3 phiên bản ảnh (Original, Medium 800x600, Thumbnail 300x300) lưu vào MinIO bucket.',
+        details: 'Generated 3 image variants (Original, Medium 800x600, Thumbnail 300x300) stored in MinIO bucket.',
       },
     ];
     this.persistJobs();
@@ -267,7 +267,7 @@ class DatabaseEngine {
           type: 'AUTH_EMAIL_EXISTS',
           title: 'Conflict',
           status: 409,
-          detail: `Email '${email}' đã được đăng ký bởi tài khoản khác trong hệ thống.`,
+          detail: `Email '${email}' is already registered in the system.`,
         },
       };
     }
@@ -278,7 +278,7 @@ class DatabaseEngine {
       userName: userName || email.split('@')[0],
       displayName: fullName,
       avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(fullName)}`,
-      bio: 'Thành viên mới của cộng đồng ẩm thực.',
+      bio: 'New member of the culinary community.',
       isActive: true,
       emailConfirmed: true,
       roles: ['Author'],
@@ -290,7 +290,7 @@ class DatabaseEngine {
     this.setCurrentUser(newUser);
 
     // Enqueue welcome email job via Hangfire
-    this.enqueueJob('WelcomeEmailJob (FR-JOB-001)', 'Fire-and-forget', `Email chào mừng gửi đến ${email}`, `MailKit SMTP gửi email kích hoạt tài khoản cho ${fullName}.`);
+    this.enqueueJob('WelcomeEmailJob (FR-JOB-001)', 'Fire-and-forget', `Welcome email sent to ${email}`, `MailKit SMTP sent account activation email to ${fullName}.`);
 
     this.addLog('POST', '/api/v1/auth/register', 201, 48, `User registered: ${email}`);
     return { user: newUser };
@@ -359,7 +359,7 @@ class DatabaseEngine {
           type: 'CATEGORY_NAME_EXISTS',
           title: 'Conflict',
           status: 409,
-          detail: `Danh mục với tên '${name}' hoặc slug '${slug}' đã tồn tại trong hệ thống.`,
+          detail: `Category with name '${name}' or slug '${slug}' already exists in the system.`,
         },
       };
     }
@@ -391,7 +391,7 @@ class DatabaseEngine {
           type: 'CATEGORY_NOT_FOUND',
           title: 'Not Found',
           status: 404,
-          detail: `Không tìm thấy danh mục với ID '${id}'.`,
+          detail: `Category with ID '${id}' not found.`,
         },
       };
     }
@@ -415,12 +415,12 @@ class DatabaseEngine {
           type: 'CATEGORY_NOT_FOUND',
           title: 'Not Found',
           status: 404,
-          detail: `Không tìm thấy danh mục với ID '${id}'.`,
+          detail: `Category with ID '${id}' not found.`,
         },
       };
     }
 
-    // Business rule: KHÔNG được xóa danh mục còn chứa công thức
+    // Business rule: Cannot delete category with active recipes
     const recipeCount = this.recipes.filter(r => !r.isDeleted && r.categoryId === id).length;
     if (recipeCount > 0) {
       return {
@@ -429,7 +429,7 @@ class DatabaseEngine {
           type: 'CATEGORY_DELETE_HAS_RECIPES',
           title: 'Conflict',
           status: 409,
-          detail: `Không thể xóa danh mục '${cat.name}' vì đang chứa ${recipeCount} công thức. Vui lòng chuyển công thức sang danh mục khác trước.`,
+          detail: `Cannot delete category '${cat.name}' because it contains ${recipeCount} associated recipe(s). Please reassign them first.`,
         },
       };
     }
@@ -531,7 +531,7 @@ class DatabaseEngine {
           type: 'RECIPE_NOT_FOUND',
           title: 'Not Found',
           status: 404,
-          detail: `Không tìm thấy công thức nấu ăn với slug '${slug}'.`,
+          detail: `Recipe with slug '${slug}' not found.`,
         },
       };
     }
@@ -547,7 +547,7 @@ class DatabaseEngine {
             type: 'RECIPE_FORBIDDEN',
             title: 'Forbidden',
             status: 403,
-            detail: 'Bạn không có quyền truy cập công thức đang ở trạng thái Bản thảo hoặc Lưu trữ.',
+            detail: 'You do not have permission to view this recipe in Draft or Archived status.',
           },
         };
       }
@@ -626,7 +626,7 @@ class DatabaseEngine {
           type: 'AUTH_UNAUTHORIZED',
           title: 'Unauthorized',
           status: 401,
-          detail: 'Yêu cầu quyền Tác giả (Author) hoặc Quản trị viên (Admin) để tạo công thức.',
+          detail: 'Author or Admin role required to create a recipe.',
         },
       };
     }
@@ -637,8 +637,8 @@ class DatabaseEngine {
           type: 'VALIDATION_ERROR',
           title: 'Validation Failed',
           status: 422,
-          detail: 'Tiêu đề công thức phải có ít nhất 5 ký tự.',
-          errors: { Title: ['Tiêu đề công thức phải từ 5 đến 200 ký tự.'] },
+          detail: 'Recipe title must be at least 5 characters long.',
+          errors: { Title: ['Recipe title must be between 5 and 200 characters.'] },
         },
       };
     }
@@ -712,7 +712,7 @@ class DatabaseEngine {
     this.evictCachePattern('recipes:');
 
     // Trigger Hangfire thumbnail generation
-    this.enqueueJob('ImageResizeJob (FR-JOB-002)', 'Fire-and-forget', `Uploaded recipe '${data.title}'`, 'Sinh thumbnail 300x300 và medium image 800x600 qua MinIO.');
+    this.enqueueJob('ImageResizeJob (FR-JOB-002)', 'Fire-and-forget', `Uploaded recipe '${data.title}'`, 'Generated thumbnail 300x300 and medium 800x600 via MinIO.');
 
     this.addLog('POST', '/api/v1/recipes', 201, 64, `Created draft recipe: ${newRecipe.title}`);
     return { recipe: newRecipe };
@@ -726,7 +726,7 @@ class DatabaseEngine {
           type: 'RECIPE_NOT_FOUND',
           title: 'Not Found',
           status: 404,
-          detail: `Không tìm thấy công thức với ID '${id}'.`,
+          detail: `Recipe with ID '${id}' not found.`,
         },
       };
     }
@@ -738,7 +738,7 @@ class DatabaseEngine {
           type: 'AUTH_UNAUTHORIZED',
           title: 'Unauthorized',
           status: 401,
-          detail: 'Vui lòng đăng nhập để cập nhật công thức.',
+          detail: 'Please sign in to update this recipe.',
         },
       };
     }
@@ -752,7 +752,7 @@ class DatabaseEngine {
           type: 'RECIPE_FORBIDDEN',
           title: 'Forbidden',
           status: 403,
-          detail: 'Bạn không có quyền chỉnh sửa công thức của tác giả khác.',
+          detail: 'You do not have permission to edit another author\'s recipe.',
         },
       };
     }
@@ -764,7 +764,7 @@ class DatabaseEngine {
           type: 'RECIPE_CONCURRENCY_CONFLICT',
           title: 'Precondition Failed',
           status: 422,
-          detail: 'Dữ liệu đã bị thay đổi bởi một yêu cầu khác. Vui lòng tải lại trang.',
+          detail: 'The entity was modified by another user. Please reload the page.',
         },
       };
     }
@@ -799,7 +799,7 @@ class DatabaseEngine {
           type: 'RECIPE_NOT_FOUND',
           title: 'Not Found',
           status: 404,
-          detail: `Không tìm thấy công thức với ID '${id}'.`,
+          detail: `Recipe with ID '${id}' not found.`,
         },
       };
     }
@@ -813,12 +813,12 @@ class DatabaseEngine {
           type: 'RECIPE_FORBIDDEN',
           title: 'Forbidden',
           status: 403,
-          detail: 'Bạn không có quyền thay đổi trạng thái công thức này.',
+          detail: 'You do not have permission to change the publication status of this recipe.',
         },
       };
     }
 
-    // Business rule: Không thể publish nếu thiếu steps hoặc ingredients
+    // Business rule: Cannot publish if steps or ingredients are missing
     if (publish) {
       if (!r.steps || r.steps.length === 0) {
         return {
@@ -826,7 +826,7 @@ class DatabaseEngine {
             type: 'RECIPE_PUBLISH_INCOMPLETE',
             title: 'Business Rule Violation',
             status: 400,
-            detail: 'Công thức phải có ít nhất 1 bước thực hiện trước khi xuất bản.',
+            detail: 'A recipe must have at least 1 step before publishing.',
           },
         };
       }
@@ -836,7 +836,7 @@ class DatabaseEngine {
             type: 'RECIPE_PUBLISH_INCOMPLETE',
             title: 'Business Rule Violation',
             status: 400,
-            detail: 'Công thức phải có ít nhất 1 nguyên liệu trước khi xuất bản.',
+            detail: 'A recipe must have at least 1 ingredient before publishing.',
           },
         };
       }
@@ -860,7 +860,7 @@ class DatabaseEngine {
           type: 'RECIPE_NOT_FOUND',
           title: 'Not Found',
           status: 404,
-          detail: `Không tìm thấy công thức với ID '${id}'.`,
+          detail: `Recipe with ID '${id}' not found.`,
         },
       };
     }
@@ -874,7 +874,7 @@ class DatabaseEngine {
           type: 'RECIPE_FORBIDDEN',
           title: 'Forbidden',
           status: 403,
-          detail: 'Bạn không có quyền lưu trữ công thức này.',
+          detail: 'You do not have permission to archive this recipe.',
         },
       };
     }
@@ -897,7 +897,7 @@ class DatabaseEngine {
           type: 'RECIPE_NOT_FOUND',
           title: 'Not Found',
           status: 404,
-          detail: `Không tìm thấy công thức với ID '${id}'.`,
+          detail: `Recipe with ID '${id}' not found.`,
         },
       };
     }
@@ -912,7 +912,7 @@ class DatabaseEngine {
           type: 'RECIPE_FORBIDDEN',
           title: 'Forbidden',
           status: 403,
-          detail: 'Bạn không có quyền xóa công thức này.',
+          detail: 'You do not have permission to delete this recipe.',
         },
       };
     }
@@ -923,7 +923,7 @@ class DatabaseEngine {
     this.evictCachePattern('recipes:');
 
     // Hangfire async delete images from MinIO
-    this.enqueueJob('MinIOFileDeletionJob', 'Fire-and-forget', `Xóa ảnh của công thức '${r.title}'`, `Xóa ${r.images.length} file ảnh trên MinIO S3 bucket.`);
+    this.enqueueJob('MinIOFileDeletionJob', 'Fire-and-forget', `Delete images for recipe '${r.title}'`, `Cleaned ${r.images.length} image files from MinIO S3 bucket.`);
 
     this.addLog('DELETE', `/api/v1/recipes/${id}`, 204, 32, `Recipe soft-deleted: ${r.title}`);
     return { success: true };

@@ -63,7 +63,7 @@ export const ApiExplorer: React.FC = () => {
         }
       } else if (selectedEndpoint.method === 'POST' && selectedEndpoint.path === '/api/v1/categories') {
         const parsed = JSON.parse(requestBody || '{}');
-        const res = db.createCategory(parsed.name || 'Danh mục mới', parsed.description, parsed.imageUrl);
+        const res = db.createCategory(parsed.name || 'New Category', parsed.description, parsed.imageUrl);
         if (res.error) {
           status = res.error.status;
           result = res.error;
@@ -135,7 +135,7 @@ export const ApiExplorer: React.FC = () => {
                 .NET 10 Minimal APIs & Scalar Explorer
               </h1>
               <p className="text-xs sm:text-sm text-stone-500">
-                Tương tác trực tiếp với ~30 REST Endpoints theo chuẩn RFC 7807 Problem Details
+                Directly interact with ~30 REST endpoints adhering to RFC 7807 Problem Details
               </p>
             </div>
           </div>
@@ -157,7 +157,7 @@ export const ApiExplorer: React.FC = () => {
         <div className="lg:col-span-5 bg-white rounded-2xl border border-stone-200 shadow-xs p-4 space-y-3 max-h-[780px] overflow-y-auto">
           <div className="flex items-center justify-between pb-2 border-b border-stone-100">
             <span className="text-xs font-bold text-stone-700 uppercase tracking-wider">
-              Danh sách Endpoint ({API_ENDPOINTS.length})
+              Endpoints ({API_ENDPOINTS.length})
             </span>
             <span className="text-[11px] text-stone-400 font-mono">ASP.NET 10</span>
           </div>
@@ -261,7 +261,7 @@ export const ApiExplorer: React.FC = () => {
             {/* Execute Button */}
             <div className="flex items-center justify-between pt-2">
               <div className="flex items-center gap-1.5 text-xs text-stone-500">
-                <span>Dự kiến Status Codes:</span>
+                <span>Expected Status Codes:</span>
                 {selectedEndpoint.statusCodes.map(sc => (
                   <span
                     key={sc.code}
@@ -277,7 +277,7 @@ export const ApiExplorer: React.FC = () => {
                 className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5" />
-                <span>Gửi Request (Execute)</span>
+                <span>Execute Request</span>
               </button>
             </div>
           </div>

@@ -80,10 +80,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
             </span>
             <div>
               <h1 className="text-2xl font-bold font-serif text-stone-900">
-                Bảng Quản lý {isAdmin ? 'Hệ thống (Admin)' : 'Tác giả (Author)'}
+                {isAdmin ? 'Admin' : 'Author'} Dashboard
               </h1>
               <p className="text-xs sm:text-sm text-stone-500">
-                Xin chào, <strong className="text-stone-800">{currentUser?.displayName || 'Tác giả'}</strong>. Quản lý danh sách sản phẩm ẩm thực & phân loại danh mục.
+                Welcome, <strong className="text-stone-800">{currentUser?.displayName || 'Author'}</strong>. Manage your culinary products, recipe inventory, and taxonomy.
               </p>
             </div>
           </div>
@@ -97,7 +97,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <FolderTree className="w-4 h-4 text-rose-600" />
-              <span>Quản lý Danh mục ({categories.length})</span>
+              <span>Categories ({categories.length})</span>
             </button>
           )}
 
@@ -106,13 +106,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
             className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
-            <span>Thêm công thức mới</span>
+            <span>New Recipe</span>
           </button>
 
           <button
             onClick={onResetSeed}
             className="p-2 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-xl transition-colors cursor-pointer"
-            title="Khôi phục dữ liệu mẫu PostgreSQL 16 (Bogus Seed)"
+            title="Reset PostgreSQL 16 seed data (Bogus Seed)"
           >
             <RotateCcw className="w-4 h-4" />
           </button>
@@ -122,22 +122,22 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-xs">
-          <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Tổng công thức</p>
+          <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Total Recipes</p>
           <p className="text-2xl font-bold font-mono text-stone-900 mt-1">{totalCount}</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-xs">
-          <p className="text-xs text-emerald-600 font-medium uppercase tracking-wider">Đã xuất bản (Published)</p>
+          <p className="text-xs text-emerald-600 font-medium uppercase tracking-wider">Published</p>
           <p className="text-2xl font-bold font-mono text-emerald-700 mt-1">{publishedCount}</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-xs">
-          <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Bản thảo (Draft)</p>
+          <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Drafts</p>
           <p className="text-2xl font-bold font-mono text-stone-600 mt-1">{draftCount}</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-xs">
-          <p className="text-xs text-amber-600 font-medium uppercase tracking-wider">Lưu trữ (Archived)</p>
+          <p className="text-xs text-amber-600 font-medium uppercase tracking-wider">Archived</p>
           <p className="text-2xl font-bold font-mono text-amber-700 mt-1">{archivedCount}</p>
         </div>
       </div>
@@ -146,7 +146,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span className="text-stone-500 flex items-center gap-1 font-medium mr-1">
-            <Filter className="w-3.5 h-3.5 text-stone-400" /> Trạng thái:
+            <Filter className="w-3.5 h-3.5 text-stone-400" /> Status:
           </span>
           <button
             onClick={() => setFilterStatus('all')}
@@ -156,7 +156,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
             }`}
           >
-            Tất cả ({recipes.length})
+            All ({recipes.length})
           </button>
           <button
             onClick={() => setFilterStatus(String(RecipeStatus.Published))}
@@ -166,7 +166,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
             }`}
           >
-            Đã xuất bản
+            Published
           </button>
           <button
             onClick={() => setFilterStatus(String(RecipeStatus.Draft))}
@@ -176,7 +176,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
             }`}
           >
-            Bản thảo (Draft)
+            Draft
           </button>
           <button
             onClick={() => setFilterStatus(String(RecipeStatus.Archived))}
@@ -186,18 +186,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
             }`}
           >
-            Lưu trữ (Archived)
+            Archived
           </button>
         </div>
 
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-stone-500">Danh mục:</span>
+          <span className="text-stone-500">Category:</span>
           <select
             value={filterCategory}
             onChange={e => setFilterCategory(e.target.value)}
             className="px-2.5 py-1 bg-stone-50 border border-stone-300 rounded-lg text-xs"
           >
-            <option value="all">Tất cả danh mục</option>
+            <option value="all">All Categories</option>
             {categories.map(cat => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -213,19 +213,19 @@ export const Dashboard: React.FC<DashboardProps> = ({
           <table className="w-full text-left text-xs">
             <thead className="bg-stone-50 border-b border-stone-200 text-stone-500 uppercase tracking-wider font-semibold">
               <tr>
-                <th className="py-3 px-4">Công thức</th>
-                <th className="py-3 px-4">Danh mục</th>
-                <th className="py-3 px-4">Thời gian</th>
-                <th className="py-3 px-4">Trạng thái</th>
-                <th className="py-3 px-4">Tác giả</th>
-                <th className="py-3 px-4 text-right">Thao tác</th>
+                <th className="py-3 px-4">Recipe</th>
+                <th className="py-3 px-4">Category</th>
+                <th className="py-3 px-4">Time</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Author</th>
+                <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
               {userRecipes.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-8 text-center text-stone-400">
-                    Không có công thức nào trong bộ lọc này.
+                    No recipes found matching this filter.
                   </td>
                 </tr>
               ) : (
@@ -255,11 +255,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       </td>
 
                       <td className="py-3 px-4 text-stone-600 font-medium">
-                        {cat?.name || 'Chưa phân loại'}
+                        {cat?.name || 'Uncategorized'}
                       </td>
 
                       <td className="py-3 px-4 text-stone-500 font-mono">
-                        {recipe.prepTime + recipe.cookTime} phút
+                        {recipe.prepTime + recipe.cookTime} mins
                       </td>
 
                       <td className="py-3 px-4">
@@ -281,7 +281,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                       </td>
 
                       <td className="py-3 px-4 text-stone-600">
-                        {recipe.author?.displayName || 'Ẩn danh'}
+                        {recipe.author?.displayName || 'Anonymous'}
                       </td>
 
                       <td className="py-3 px-4 text-right">
@@ -289,7 +289,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           <button
                             onClick={() => onSelectRecipe(recipe)}
                             className="p-1.5 text-stone-400 hover:text-stone-800 hover:bg-stone-100 rounded-lg cursor-pointer"
-                            title="Xem chi tiết"
+                            title="View details"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
@@ -297,7 +297,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           <button
                             onClick={() => onEditRecipe(recipe)}
                             className="p-1.5 text-stone-400 hover:text-amber-600 hover:bg-stone-100 rounded-lg cursor-pointer"
-                            title="Chỉnh sửa (Edit)"
+                            title="Edit recipe"
                           >
                             <Edit3 className="w-4 h-4" />
                           </button>
@@ -309,7 +309,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                                 ? 'text-amber-600 hover:bg-amber-50'
                                 : 'text-emerald-600 hover:bg-emerald-50'
                             }`}
-                            title={recipe.status === RecipeStatus.Published ? 'Hủy xuất bản' : 'Xuất bản'}
+                            title={recipe.status === RecipeStatus.Published ? 'Unpublish' : 'Publish'}
                           >
                             <CheckCircle className="w-4 h-4" />
                           </button>
@@ -317,7 +317,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           <button
                             onClick={() => onArchiveToggle(recipe)}
                             className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-lg cursor-pointer"
-                            title="Lưu trữ (Archive)"
+                            title="Archive / Unarchive"
                           >
                             <Archive className="w-4 h-4" />
                           </button>
@@ -325,7 +325,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                           <button
                             onClick={() => onDeleteRecipe(recipe)}
                             className="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
-                            title="Xóa công thức"
+                            title="Delete recipe"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>

@@ -42,7 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Quick Role Switcher for instant permission testing */}
           <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-stone-400 mr-1">Chế độ vai trò:</span>
+            <span className="text-stone-400 mr-1">Role:</span>
             <button
               onClick={() => onSwitchRole('Guest')}
               className={`px-2 py-0.5 rounded transition-all text-xs font-medium cursor-pointer ${
@@ -50,10 +50,10 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-amber-600 text-white shadow-xs'
                   : 'bg-stone-800 text-stone-300 hover:bg-stone-700'
               }`}
-              title="Khách (Chỉ xem công thức Published)"
+              title="Guest (Read published recipes only)"
             >
               <span className="flex items-center gap-1">
-                <UserX className="w-3 h-3" /> Khách (Guest)
+                <UserX className="w-3 h-3" /> Guest
               </span>
             </button>
             <button
@@ -63,10 +63,10 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-stone-800 text-stone-300 hover:bg-stone-700'
               }`}
-              title="Tác giả (Tạo/Sửa/Xóa công thức của mình)"
+              title="Author (Create/Edit/Delete own recipes)"
             >
               <span className="flex items-center gap-1">
-                <UserCheck className="w-3 h-3" /> Tác giả (Author)
+                <UserCheck className="w-3 h-3" /> Author
               </span>
             </button>
             <button
@@ -76,10 +76,10 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-rose-600 text-white shadow-xs'
                   : 'bg-stone-800 text-stone-300 hover:bg-stone-700'
               }`}
-              title="Quản trị viên (Toàn quyền CRUD & Quản lý danh mục)"
+              title="Admin (Full CRUD & Category management)"
             >
               <span className="flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" /> Quản trị (Admin)
+                <ShieldCheck className="w-3 h-3" /> Admin
               </span>
             </button>
           </div>
@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <p className="text-xs text-stone-500 hidden sm:block">
-                Hệ thống Quản lý Công thức & Sản phẩm Ẩm thực
+                Recipe & Culinary Products Management Platform
               </p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <span className="flex items-center gap-2">
                 <Search className="w-4 h-4 text-stone-400" />
-                <span>Tìm công thức (FTS tsvector tiếng Việt)...</span>
+                <span>Search recipes (PostgreSQL 16 tsvector FTS)...</span>
               </span>
               <kbd className="hidden lg:inline-block px-1.5 py-0.5 text-[10px] font-mono text-stone-400 bg-white rounded border border-stone-200">
                 ⌘K
@@ -138,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
-              Khám phá
+              Explore
             </button>
 
             <button
@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
-              Quản lý
+              Management
             </button>
 
             <button
@@ -173,7 +173,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Database className="w-4 h-4 text-emerald-600" />
-              <span className="hidden sm:inline">Kiến trúc C# & SQL</span>
+              <span className="hidden sm:inline">C# & SQL Architecture</span>
             </button>
 
             <button
@@ -183,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ? 'bg-purple-50 text-purple-900 font-semibold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
-              title="Giám sát hệ thống & Hangfire jobs"
+              title="System observability & Hangfire jobs"
             >
               <Activity className="w-4 h-4 text-purple-600" />
             </button>
@@ -194,7 +194,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onOpenSearch}
               className="p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg md:hidden cursor-pointer"
-              title="Tìm kiếm"
+              title="Search"
             >
               <Search className="w-5 h-5" />
             </button>
@@ -205,14 +205,14 @@ export const Header: React.FC<HeaderProps> = ({
                 className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium shadow-xs transition-colors cursor-pointer"
               >
                 <PlusCircle className="w-4 h-4" />
-                <span className="hidden sm:inline">Tạo công thức</span>
+                <span className="hidden sm:inline">Create Recipe</span>
               </button>
             ) : (
               <button
                 onClick={() => onSwitchRole('Author')}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-600 text-amber-700 hover:bg-amber-50 text-xs font-semibold transition-colors cursor-pointer"
               >
-                Đăng nhập Tác giả
+                Sign In as Author
               </button>
             )}
           </div>

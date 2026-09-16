@@ -36,10 +36,10 @@ export const ArchitectureViewer: React.FC = () => {
             </span>
             <div>
               <h1 className="text-2xl font-bold font-serif text-stone-900">
-                Kiến trúc Hệ thống: .NET 10 & PostgreSQL 16
+                System Architecture: .NET 10 & PostgreSQL 16
               </h1>
               <p className="text-xs sm:text-sm text-stone-500">
-                Tuân thủ Clean Architecture (Robert C. Martin), CQRS MediatR & EF Core 10 Code-First
+                Adhering to Clean Architecture (Robert C. Martin), CQRS MediatR & EF Core 10 Code-First
               </p>
             </div>
           </div>
@@ -47,7 +47,7 @@ export const ArchitectureViewer: React.FC = () => {
 
         <div className="flex items-center gap-2 text-xs">
           <span className="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 font-medium">
-            CONS-001: 4 Tầng độc lập
+            CONS-001: 4 Decoupled Layers
           </span>
           <span className="px-2.5 py-1 rounded-md bg-sky-50 text-sky-800 border border-sky-200 font-medium">
             CONS-002: CQRS + MediatR
@@ -74,7 +74,7 @@ export const ArchitectureViewer: React.FC = () => {
           </div>
           <h4 className="font-semibold text-stone-900 text-sm">CulinaryBlog.Domain</h4>
           <p className="text-xs text-stone-500 mt-1">
-            Entities (Recipe, Category), Value Objects, Enums, Owned Entity RecipeNutrition. Không có package ngoài.
+            Entities (Recipe, Category), Value Objects, Enums, Owned Entity RecipeNutrition. Zero external dependencies.
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export const ArchitectureViewer: React.FC = () => {
           </div>
           <h4 className="font-semibold text-stone-900 text-sm">PostgreSQL 16 Engine</h4>
           <p className="text-xs text-stone-500 mt-1">
-            Full-Text Search tsvector trigger, unaccent tiếng Việt, GIN index, Soft delete & RowVersion.
+            Full-Text Search tsvector trigger, unaccent collation, GIN index, soft delete & RowVersion.
           </p>
         </div>
       </div>
@@ -151,7 +151,7 @@ export const ArchitectureViewer: React.FC = () => {
             className="px-3 py-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? 'Đã sao chép' : 'Sao chép mã'}</span>
+            <span>{copied ? 'Copied' : 'Copy Code'}</span>
           </button>
         </div>
 

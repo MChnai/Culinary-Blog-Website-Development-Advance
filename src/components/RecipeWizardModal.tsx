@@ -99,12 +99,12 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
 
   const validateAndSubmit = (publishImmediately = false) => {
     if (!title || title.trim().length < 5) {
-      setValidationError('Tiêu đề công thức phải có ít nhất 5 ký tự (FluentValidation Rule).');
+      setValidationError('Recipe title must be at least 5 characters long (FluentValidation Rule).');
       setActiveTab('info');
       return;
     }
     if (!description || description.trim().length < 10) {
-      setValidationError('Vui lòng nhập mô tả công thức (ít nhất 10 ký tự).');
+      setValidationError('Please enter a recipe description (at least 10 characters).');
       setActiveTab('info');
       return;
     }
@@ -113,7 +113,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
     const validSteps = steps.filter(s => s.description && s.description.trim().length > 0);
 
     if (publishImmediately && (validSteps.length === 0 || validIngredients.length === 0)) {
-      setValidationError('Để xuất bản ngay (Publish), công thức bắt buộc phải có ít nhất 1 nguyên liệu và 1 bước thực hiện.');
+      setValidationError('To publish immediately, the recipe must contain at least 1 ingredient and 1 instruction step.');
       return;
     }
 
@@ -154,7 +154,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
         <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
           <div>
             <h2 className="text-lg sm:text-xl font-bold font-serif text-stone-900">
-              {recipeToEdit ? 'Chỉnh sửa Công thức' : 'Tạo mới Công thức Nấu ăn'}
+              {recipeToEdit ? 'Edit Recipe' : 'Create New Recipe'}
             </h2>
             <p className="text-xs text-stone-500">
               .NET 10 CQRS CreateRecipeCommand / UpdateRecipeCommand with FluentValidation
@@ -178,7 +178,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
-            1. Thông tin chung
+            1. General Info
           </button>
           <button
             onClick={() => setActiveTab('ingredients')}
@@ -188,7 +188,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
-            2. Nguyên liệu ({ingredients.length})
+            2. Ingredients ({ingredients.length})
           </button>
           <button
             onClick={() => setActiveTab('steps')}
@@ -198,7 +198,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
-            3. Các bước nấu ({steps.length})
+            3. Cooking Steps ({steps.length})
           </button>
           <button
             onClick={() => setActiveTab('nutrition')}
@@ -208,7 +208,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
-            4. Dinh dưỡng & Ảnh
+            4. Nutrition & Photo
           </button>
         </div>
 
@@ -226,7 +226,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                  Tiêu đề công thức *
+                  Recipe Title *
                 </label>
                 <input
                   type="text"
@@ -235,14 +235,14 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                     setTitle(e.target.value);
                     setValidationError(null);
                   }}
-                  placeholder="Ví dụ: Phở Bò Tái Lăn Hà Nội Chuẩn Vị"
+                  placeholder="e.g. Authentic Hanoi Beef Pho"
                   className="w-full px-3.5 py-2 border border-stone-300 rounded-lg text-sm focus:outline-hidden focus:ring-2 focus:ring-amber-500"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                  Mô tả ngắn gọn (SEO Description) *
+                  Brief Description (SEO Description) *
                 </label>
                 <textarea
                   value={description}
@@ -251,7 +251,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                     setValidationError(null);
                   }}
                   rows={3}
-                  placeholder="Mô tả hương vị, nguồn gốc và nét đặc sắc của món ăn..."
+                  placeholder="Describe the aroma, flavor profile, history, and key highlights of this dish..."
                   className="w-full px-3.5 py-2 border border-stone-300 rounded-lg text-sm focus:outline-hidden focus:ring-2 focus:ring-amber-500"
                 />
               </div>
@@ -259,7 +259,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                    Danh mục món ăn
+                    Category
                   </label>
                   <select
                     value={categoryId}
@@ -276,17 +276,17 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                    Độ khó
+                    Difficulty
                   </label>
                   <select
                     value={difficulty}
                     onChange={e => setDifficulty(Number(e.target.value) as RecipeDifficulty)}
                     className="w-full px-3.5 py-2 border border-stone-300 rounded-lg text-sm focus:outline-hidden focus:ring-2 focus:ring-amber-500 bg-white"
                   >
-                    <option value={RecipeDifficulty.Easy}>Dễ làm (Easy)</option>
-                    <option value={RecipeDifficulty.Medium}>Trung bình (Medium)</option>
-                    <option value={RecipeDifficulty.Hard}>Nâng cao (Hard)</option>
-                    <option value={RecipeDifficulty.Expert}>Chuyên nghiệp (Expert)</option>
+                    <option value={RecipeDifficulty.Easy}>Easy</option>
+                    <option value={RecipeDifficulty.Medium}>Medium</option>
+                    <option value={RecipeDifficulty.Hard}>Hard</option>
+                    <option value={RecipeDifficulty.Expert}>Expert</option>
                   </select>
                 </div>
               </div>
@@ -294,7 +294,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                    Chuẩn bị (phút)
+                    Prep Time (min)
                   </label>
                   <input
                     type="number"
@@ -307,7 +307,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                    Nấu (phút)
+                    Cook Time (min)
                   </label>
                   <input
                     type="number"
@@ -320,7 +320,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
 
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                    Khẩu phần
+                    Servings
                   </label>
                   <input
                     type="number"
@@ -338,14 +338,14 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-xs text-stone-500">
-                  Nhập danh sách nguyên liệu và định lượng cho món ăn.
+                  Specify ingredients and precise portions for this recipe.
                 </p>
                 <button
                   type="button"
                   onClick={handleAddIngredient}
                   className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-md text-xs font-semibold flex items-center gap-1 border border-amber-200 cursor-pointer"
                 >
-                  <Plus className="w-3.5 h-3.5" /> Thêm nguyên liệu
+                  <Plus className="w-3.5 h-3.5" /> Add Ingredient
                 </button>
               </div>
 
@@ -358,30 +358,30 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                     <span className="text-xs font-mono text-stone-400 w-5 text-center">{idx + 1}</span>
                     <input
                       type="text"
-                      placeholder="Tên nguyên liệu *"
+                      placeholder="Ingredient name *"
                       value={ing.name || ''}
                       onChange={e => handleIngredientChange(idx, 'name', e.target.value)}
                       className="flex-2 px-2.5 py-1.5 bg-white border border-stone-300 rounded text-xs focus:ring-1 focus:ring-amber-500"
                     />
                     <input
                       type="number"
-                      placeholder="SL"
+                      placeholder="Qty"
                       value={ing.quantity || ''}
                       onChange={e => handleIngredientChange(idx, 'quantity', Number(e.target.value))}
                       className="w-16 px-2.5 py-1.5 bg-white border border-stone-300 rounded text-xs focus:ring-1 focus:ring-amber-500"
                     />
                     <input
                       type="text"
-                      placeholder="Đơn vị (gram, quả...)"
+                      placeholder="Unit (g, tbsp, pcs...)"
                       value={ing.unit || ''}
                       onChange={e => handleIngredientChange(idx, 'unit', e.target.value)}
-                      className="w-24 px-2.5 py-1.5 bg-white border border-stone-300 rounded text-xs focus:ring-1 focus:ring-amber-500"
+                      className="w-28 px-2.5 py-1.5 bg-white border border-stone-300 rounded text-xs focus:ring-1 focus:ring-amber-500"
                     />
                     <button
                       type="button"
                       onClick={() => handleRemoveIngredient(idx)}
                       className="p-1.5 text-stone-400 hover:text-rose-600 cursor-pointer"
-                      title="Xóa"
+                      title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -395,14 +395,14 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <p className="text-xs text-stone-500">
-                  Từng bước chế biến kèm thời gian đếm ngược (Timer).
+                  Step-by-step preparation with optional countdown timer.
                 </p>
                 <button
                   type="button"
                   onClick={handleAddStep}
                   className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-md text-xs font-semibold flex items-center gap-1 border border-amber-200 cursor-pointer"
                 >
-                  <Plus className="w-3.5 h-3.5" /> Thêm bước mới
+                  <Plus className="w-3.5 h-3.5" /> Add Step
                 </button>
               </div>
 
@@ -419,7 +419,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                         </span>
                         <input
                           type="text"
-                          placeholder="Tiêu đề bước (ví dụ: Sơ chế xương bò)"
+                          placeholder="Step title (e.g. Blanch beef bones)"
                           value={step.title || ''}
                           onChange={e => handleStepChange(idx, 'title', e.target.value)}
                           className="px-2.5 py-1 bg-white border border-stone-300 rounded text-xs font-semibold w-64 focus:ring-1 focus:ring-amber-500"
@@ -429,16 +429,16 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-stone-500 flex items-center gap-1">
                           <Clock className="w-3.5 h-3.5 text-stone-400" />
-                          Hẹn giờ:
+                          Timer:
                         </span>
                         <input
                           type="number"
-                          placeholder="Phút"
+                          placeholder="Min"
                           value={step.timerMinutes || ''}
                           onChange={e => handleStepChange(idx, 'timerMinutes', Number(e.target.value))}
                           className="w-16 px-2 py-1 bg-white border border-stone-300 rounded text-xs focus:ring-1 focus:ring-amber-500"
                         />
-                        <span className="text-xs text-stone-400">phút</span>
+                        <span className="text-xs text-stone-400">min</span>
 
                         <button
                           type="button"
@@ -451,7 +451,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                     </div>
 
                     <textarea
-                      placeholder="Mô tả chi tiết bước thực hiện..."
+                      placeholder="Detailed instructions for this step..."
                       value={step.description || ''}
                       onChange={e => handleStepChange(idx, 'description', e.target.value)}
                       rows={2}
@@ -467,7 +467,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">
-                  Hình ảnh đại diện món ăn (URL / MinIO S3)
+                  Hero Image URL (URL / MinIO S3)
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -492,11 +492,11 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
 
               <div className="pt-2 border-t border-stone-200">
                 <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                  Bảng thông tin dinh dưỡng (RecipeNutrition Owned Entity)
+                  Nutritional Breakdown (RecipeNutrition Owned Entity)
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div>
-                    <span className="text-[11px] text-stone-500 block mb-1">Năng lượng (kcal)</span>
+                    <span className="text-[11px] text-stone-500 block mb-1">Calories (kcal)</span>
                     <input
                       type="number"
                       value={calories}
@@ -505,7 +505,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                     />
                   </div>
                   <div>
-                    <span className="text-[11px] text-stone-500 block mb-1">Chất đạm (Protein - g)</span>
+                    <span className="text-[11px] text-stone-500 block mb-1">Protein (g)</span>
                     <input
                       type="number"
                       value={protein}
@@ -514,7 +514,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                     />
                   </div>
                   <div>
-                    <span className="text-[11px] text-stone-500 block mb-1">Tinh bột (Carbs - g)</span>
+                    <span className="text-[11px] text-stone-500 block mb-1">Carbohydrates (g)</span>
                     <input
                       type="number"
                       value={carbs}
@@ -523,7 +523,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                     />
                   </div>
                   <div>
-                    <span className="text-[11px] text-stone-500 block mb-1">Chất béo (Fat - g)</span>
+                    <span className="text-[11px] text-stone-500 block mb-1">Fat (g)</span>
                     <input
                       type="number"
                       value={fat}
@@ -550,7 +550,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
                 }}
                 className="text-stone-600 hover:text-stone-900 font-semibold cursor-pointer"
               >
-                ← Quay lại bước trước
+                ← Back to previous step
               </button>
             )}
           </div>
@@ -561,7 +561,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
               onClick={() => validateAndSubmit(false)}
               className="px-4 py-2 border border-stone-300 hover:bg-white text-stone-700 rounded-lg text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
             >
-              Lưu Bản thảo (Draft)
+              Save as Draft
             </button>
 
             <button
@@ -570,7 +570,7 @@ export const RecipeWizardModal: React.FC<RecipeWizardModalProps> = ({
               className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-semibold shadow-2xs transition-colors cursor-pointer flex items-center gap-1.5"
             >
               <Check className="w-4 h-4" />
-              <span>Xuất bản ngay (Publish)</span>
+              <span>Publish Recipe</span>
             </button>
           </div>
         </div>

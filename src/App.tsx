@@ -90,7 +90,7 @@ export default function App() {
   const handleSwitchRole = (role: UserRole) => {
     db.switchUserRole(role);
     setCurrentUser(db.getCurrentUser());
-    showToast(`Đã chuyển sang vai trò: ${role === 'Admin' ? 'Quản trị viên (Admin)' : role === 'Author' ? 'Tác giả (Author)' : 'Khách (Guest)'}`, 'info');
+    showToast(`Switched active role to: ${role}`, 'info');
   };
 
   const handleSaveRecipe = (data: Partial<Recipe>, publishImmediately?: boolean) => {
@@ -103,7 +103,7 @@ export default function App() {
       if (publishImmediately) {
         db.publishRecipe(recipeToEdit.id, true);
       }
-      showToast(`Đã cập nhật công thức '${res.recipe?.title}' thành công.`);
+      showToast(`Successfully updated recipe '${res.recipe?.title}'.`);
     } else {
       const res = db.createRecipe(data);
       if (res.error) {
@@ -113,12 +113,12 @@ export default function App() {
       if (publishImmediately && res.recipe) {
         const pubRes = db.publishRecipe(res.recipe.id, true);
         if (pubRes.error) {
-          showToast(`Đã tạo bản thảo nhưng chưa thể xuất bản: ${pubRes.error.detail}`, 'error');
+          showToast(`Created draft, but failed to publish: ${pubRes.error.detail}`, 'error');
         } else {
-          showToast(`Đã tạo và xuất bản công thức '${res.recipe.title}'.`);
+          showToast(`Created and published recipe '${res.recipe.title}'.`);
         }
       } else {
-        showToast(`Đã lưu công thức '${res.recipe?.title}' ở trạng thái Bản thảo (Draft).`);
+        showToast(`Saved recipe '${res.recipe?.title}' as Draft.`);
       }
     }
 
@@ -135,8 +135,8 @@ export default function App() {
     } else {
       showToast(
         willPublish
-          ? `Đã xuất bản công thức '${recipe.title}' lên trang chủ.`
-          : `Đã đưa công thức '${recipe.title}' về trạng thái Bản thảo.`
+          ? `Published recipe '${recipe.title}'.`
+          : `Moved recipe '${recipe.title}' back to Draft.`
       );
       loadData();
       if (selectedRecipe && selectedRecipe.id === recipe.id) {
@@ -150,7 +150,7 @@ export default function App() {
     if (res.error) {
       showToast(res.error.detail, 'error');
     } else {
-      showToast(`Đã cập nhật trạng thái lưu trữ của '${recipe.title}'.`);
+      showToast(`Updated archive status for '${recipe.title}'.`);
       loadData();
       if (selectedRecipe && selectedRecipe.id === recipe.id) {
         setSelectedRecipe(res.recipe || null);
@@ -159,23 +159,23 @@ export default function App() {
   };
 
   const handleDeleteRecipe = (recipe: Recipe) => {
-    if (!window.confirm(`Bạn có chắc chắn muốn xóa công thức '${recipe.title}'?`)) return;
+    if (!window.confirm(`Are you sure you want to delete recipe '${recipe.title}'?`)) return;
     const res = db.deleteRecipe(recipe.id);
     if (!res.success && res.error) {
       showToast(res.error.detail, 'error');
     } else {
-      showToast(`Đã xóa công thức '${recipe.title}'.`);
+      showToast(`Deleted recipe '${recipe.title}'.`);
       setSelectedRecipe(null);
       loadData();
     }
   };
 
   const handleResetSeed = () => {
-    if (window.confirm('Khôi phục toàn bộ dữ liệu mẫu ban đầu của PostgreSQL 16 và MinIO?')) {
+    if (window.confirm('Restore initial sample dataset for PostgreSQL 16 and MinIO?')) {
       db.resetToSeed();
       setCurrentUser(db.getCurrentUser());
       loadData();
-      showToast('Đã khôi phục dữ liệu mẫu Bogus thành công.');
+      showToast('Successfully reset sample Bogus dataset.');
     }
   };
 
@@ -230,13 +230,13 @@ export default function App() {
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl font-bold font-serif leading-tight">
-                  Khám phá tinh hoa ẩm thực truyền thống
+                  Discover Culinary Art & Timeless Flavors
                 </h1>
 
                 <p className="text-sm sm:text-base text-stone-300 leading-relaxed">
-                  Hệ thống quản lý công thức và sản phẩm ẩm thực xây dựng với{' '}
+                  Culinary recipe & product management platform powered by{' '}
                   <strong className="text-amber-300 font-semibold">.NET 10 Minimal APIs</strong>,{' '}
-                  <strong className="text-amber-300 font-semibold">PostgreSQL 16</strong> và{' '}
+                  <strong className="text-amber-300 font-semibold">PostgreSQL 16</strong>, and{' '}
                   <strong className="text-amber-300 font-semibold">Next.js App Router</strong>.
                 </p>
 
@@ -246,14 +246,14 @@ export default function App() {
                     className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold text-xs sm:text-sm shadow-md transition-colors cursor-pointer flex items-center gap-2"
                   >
                     <Search className="w-4 h-4" />
-                    <span>Tìm kiếm FTS tiếng Việt</span>
+                    <span>Search recipes (FTS)</span>
                   </button>
 
                   <button
                     onClick={() => setActiveTab('api')}
                     className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-medium text-xs sm:text-sm border border-white/20 transition-colors cursor-pointer"
                   >
-                    Xem REST API Spec (/scalar)
+                    Explore REST API Spec (/scalar)
                   </button>
                 </div>
               </div>
@@ -272,14 +272,14 @@ export default function App() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-bold font-serif text-stone-900">
-                  Danh mục món ăn ({categories.length})
+                  Categories ({categories.length})
                 </h2>
                 {currentUser?.roles.includes('Admin') && (
                   <button
                     onClick={() => setIsCategoryManagerOpen(true)}
                     className="text-xs text-amber-700 hover:text-amber-800 font-semibold cursor-pointer"
                   >
-                    + Quản lý danh mục
+                    + Manage categories
                   </button>
                 )}
               </div>
@@ -296,7 +296,7 @@ export default function App() {
                       : 'bg-white text-stone-700 border border-stone-200 hover:bg-stone-50'
                   }`}
                 >
-                  Tất cả món ăn
+                  All Recipes
                 </button>
 
                 {categories.map(cat => (
@@ -332,7 +332,7 @@ export default function App() {
               <div className="flex flex-wrap items-center gap-3 text-xs">
                 <div className="flex items-center gap-1.5 text-stone-500 font-medium">
                   <SlidersHorizontal className="w-3.5 h-3.5 text-stone-400" />
-                  <span>Bộ lọc:</span>
+                  <span>Filters:</span>
                 </div>
 
                 {/* Difficulty Filter */}
@@ -344,16 +344,16 @@ export default function App() {
                   }}
                   className="px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-medium text-stone-700 focus:ring-1 focus:ring-amber-500"
                 >
-                  <option value="all">Độ khó: Tất cả</option>
-                  <option value={RecipeDifficulty.Easy}>Dễ làm (Easy)</option>
-                  <option value={RecipeDifficulty.Medium}>Trung bình (Medium)</option>
-                  <option value={RecipeDifficulty.Hard}>Nâng cao (Hard)</option>
-                  <option value={RecipeDifficulty.Expert}>Chuyên nghiệp (Expert)</option>
+                  <option value="all">Difficulty: All</option>
+                  <option value={RecipeDifficulty.Easy}>Easy</option>
+                  <option value={RecipeDifficulty.Medium}>Medium</option>
+                  <option value={RecipeDifficulty.Hard}>Hard</option>
+                  <option value={RecipeDifficulty.Expert}>Expert</option>
                 </select>
 
                 {/* Max cook time filter */}
                 <div className="flex items-center gap-2 bg-stone-50 px-3 py-1 border border-stone-200 rounded-lg">
-                  <span className="text-stone-500">Thời gian nấu ≤</span>
+                  <span className="text-stone-500">Cook Time ≤</span>
                   <input
                     type="range"
                     min="15"
@@ -367,24 +367,24 @@ export default function App() {
                     className="w-20 accent-amber-600"
                   />
                   <span className="font-mono font-semibold text-stone-800">
-                    {maxCookTime >= 240 ? 'Tất cả' : `${maxCookTime}p`}
+                    {maxCookTime >= 240 ? 'Any' : `${maxCookTime}m`}
                   </span>
                 </div>
               </div>
 
               {/* Sorting Filter (FR-SRCH-003) */}
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-stone-500">Sắp xếp:</span>
+                <span className="text-stone-500">Sort by:</span>
                 <select
                   value={sortField}
                   onChange={e => setSortField(e.target.value)}
                   className="px-3 py-1.5 bg-stone-50 border border-stone-200 rounded-lg text-xs font-medium text-stone-700 focus:ring-1 focus:ring-amber-500"
                 >
-                  <option value="-createdAt">Mới nhất (-createdAt)</option>
-                  <option value="createdAt">Cũ nhất (createdAt)</option>
-                  <option value="title">Tên A-Z (title)</option>
-                  <option value="cookTime">Thời gian nấu tăng dần</option>
-                  <option value="-cookTime">Thời gian nấu giảm dần</option>
+                  <option value="-createdAt">Newest first (-createdAt)</option>
+                  <option value="createdAt">Oldest first (createdAt)</option>
+                  <option value="title">Title A-Z (title)</option>
+                  <option value="cookTime">Cook time: Low to high</option>
+                  <option value="-cookTime">Cook time: High to low</option>
                 </select>
               </div>
             </div>
@@ -393,20 +393,20 @@ export default function App() {
             <div className="space-y-4">
               <div className="flex items-center justify-between text-xs text-stone-500">
                 <span>
-                  Hiển thị <strong className="text-stone-900">{recipes.length}</strong> trên tổng số{' '}
-                  <strong className="text-stone-900">{totalCount}</strong> công thức
+                  Showing <strong className="text-stone-900">{recipes.length}</strong> of{' '}
+                  <strong className="text-stone-900">{totalCount}</strong> recipes
                 </span>
                 <span className="font-mono text-[11px] text-stone-400">
-                  OFFSET-LIMIT Pagination • Trang {currentPage}/{totalPages}
+                  OFFSET-LIMIT Pagination • Page {currentPage}/{totalPages}
                 </span>
               </div>
 
               {recipes.length === 0 ? (
                 <div className="bg-white rounded-2xl border border-stone-200 p-12 text-center space-y-3">
                   <BookOpen className="w-10 h-10 text-stone-300 mx-auto" />
-                  <h3 className="font-bold text-stone-800 text-base">Không tìm thấy công thức nào</h3>
+                  <h3 className="font-bold text-stone-800 text-base">No recipes found</h3>
                   <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                    Thử thay đổi bộ lọc danh mục hoặc thời gian nấu để tìm thêm nhiều món ngon.
+                    Try adjusting your category filter or cook time threshold.
                   </p>
                   <button
                     onClick={() => {
@@ -416,7 +416,7 @@ export default function App() {
                     }}
                     className="mt-2 px-4 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold cursor-pointer"
                   >
-                    Xóa toàn bộ bộ lọc
+                    Clear all filters
                   </button>
                 </div>
               ) : (
@@ -506,10 +506,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-stone-800">
-              Culinary Blog – Nền tảng Giáo trình Phát triển Ứng dụng Web Nâng cao V4
+              Culinary Blog – Advanced Web Application Engineering Platform
             </p>
             <p className="text-stone-400 mt-0.5">
-              Tuân thủ chuẩn IEEE 830 / ISO/IEC/IEEE 29148:2018 • .NET 10 Minimal APIs & PostgreSQL 16
+              Compliant with IEEE 830 / ISO 29148:2018 • .NET 10 Minimal APIs & PostgreSQL 16
             </p>
           </div>
 

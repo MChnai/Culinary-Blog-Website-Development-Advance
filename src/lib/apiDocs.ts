@@ -16,12 +16,12 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
     method: 'POST',
     path: '/api/v1/auth/register',
     module: 'Authentication',
-    summary: 'Đăng ký tài khoản mới (FR-AUTH-001) - Tự động gán role Author, cấp JWT & kích hoạt WelcomeEmailJob qua Hangfire',
+    summary: 'Register new account (FR-AUTH-001) - Automatically assigns Author role, issues JWT & triggers WelcomeEmailJob via Hangfire',
     authRequired: false,
     requestSample: JSON.stringify(
       {
-        fullName: 'Nguyễn Văn Minh',
-        email: 'minh.chef@culinaryblog.vn',
+        fullName: 'Nguyen Van Minh',
+        email: 'minh.chef@culinaryblog.com',
         userName: 'minhchef',
         password: 'Password123@#',
       },
@@ -35,8 +35,8 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
         expiresAt: '2026-09-15T10:05:00Z',
         user: {
           id: 'usr-8a9d12f',
-          fullName: 'Nguyễn Văn Minh',
-          email: 'minh.chef@culinaryblog.vn',
+          fullName: 'Nguyen Van Minh',
+          email: 'minh.chef@culinaryblog.com',
           userName: 'minhchef',
           roles: ['Author'],
         },
@@ -45,20 +45,20 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
       2
     ),
     statusCodes: [
-      { code: 201, desc: 'Đăng ký thành công và tự động cấp JWT' },
-      { code: 409, desc: 'AUTH_EMAIL_EXISTS - Email đã được đăng ký trước đó' },
-      { code: 422, desc: 'VALIDATION_ERROR - Mật khẩu hoặc dữ liệu đầu vào không hợp lệ' },
+      { code: 201, desc: 'Registered successfully and issued JWT' },
+      { code: 409, desc: 'AUTH_EMAIL_EXISTS - Email is already registered' },
+      { code: 422, desc: 'VALIDATION_ERROR - Password or input data failed validation' },
     ],
   },
   {
     method: 'POST',
     path: '/api/v1/auth/login',
     module: 'Authentication',
-    summary: 'Đăng nhập bằng Email/Password (FR-AUTH-002) - Token rotation, chống user enumeration',
+    summary: 'Login with Email/Password (FR-AUTH-002) - Token rotation, anti user-enumeration',
     authRequired: false,
     requestSample: JSON.stringify(
       {
-        email: 'admin@culinaryblog.vn',
+        email: 'admin@culinaryblog.com',
         password: 'AdminPassword123!',
       },
       null,
@@ -71,7 +71,7 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
         expiresIn: 900,
         user: {
           id: 'usr-admin-001',
-          displayName: 'Bếp Trưởng Quản Trị (Admin)',
+          displayName: 'Executive Chef Admin',
           roles: ['Admin', 'Author'],
         },
       },
@@ -79,24 +79,24 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
       2
     ),
     statusCodes: [
-      { code: 200, desc: 'Đăng nhập thành công' },
-      { code: 401, desc: 'AUTH_INVALID_CREDENTIALS - Sai email hoặc mật khẩu' },
-      { code: 423, desc: 'LOCKED - Tài khoản tạm thời bị khóa do nhập sai 5 lần' },
+      { code: 200, desc: 'Login successful' },
+      { code: 401, desc: 'AUTH_INVALID_CREDENTIALS - Invalid email or password' },
+      { code: 423, desc: 'LOCKED - Account temporarily locked after 5 failed attempts' },
     ],
   },
   {
     method: 'GET',
     path: '/api/v1/auth/me',
     module: 'Authentication',
-    summary: 'Lấy thông tin hồ sơ người dùng hiện tại (FR-AUTH-006)',
+    summary: 'Get current user profile (FR-AUTH-006)',
     authRequired: true,
     responseSample: JSON.stringify(
       {
         id: 'usr-admin-001',
-        email: 'admin@culinaryblog.vn',
-        displayName: 'Bếp Trưởng Quản Trị (Admin)',
+        email: 'admin@culinaryblog.com',
+        displayName: 'Executive Chef Admin',
         avatarUrl: 'https://images.unsplash.com/...',
-        bio: 'Bếp trưởng với 15 năm kinh nghiệm...',
+        bio: 'Executive Chef with over 15 years in Michelin-starred establishments.',
         roles: ['Admin', 'Author'],
         emailConfirmed: true,
       },
@@ -104,8 +104,8 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
       2
     ),
     statusCodes: [
-      { code: 200, desc: 'Thành công' },
-      { code: 401, desc: 'Chưa xác thực hoặc token hết hạn' },
+      { code: 200, desc: 'Success' },
+      { code: 401, desc: 'Unauthorized or token expired' },
     ],
   },
 
@@ -114,41 +114,41 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
     method: 'GET',
     path: '/api/v1/categories',
     module: 'Categories',
-    summary: 'Xem danh sách danh mục (FR-CAT-001) - Cache IMemoryCache TTL 60m',
+    summary: 'Get list of categories (FR-CAT-001) - Cached with IMemoryCache TTL 60m',
     authRequired: false,
     responseSample: JSON.stringify(
       [
         {
           id: 'cat-001',
-          name: 'Món chính',
-          slug: 'mon-chinh',
-          description: 'Các món ăn no cho bữa cơm gia đình.',
+          name: 'Main Courses',
+          slug: 'main-courses',
+          description: 'Hearty, wholesome main dishes for family dinners.',
           recipeCount: 3,
         },
         {
           id: 'cat-003',
-          name: 'Bún & Phở',
-          slug: 'bun-va-pho',
-          description: 'Tinh hoa nước dùng và sợi truyền thống.',
+          name: 'Noodles & Broths',
+          slug: 'noodles-and-broths',
+          description: 'Artisanal broths and regional noodle specialties.',
           recipeCount: 2,
         },
       ],
       null,
       2
     ),
-    statusCodes: [{ code: 200, desc: 'Thành công' }],
+    statusCodes: [{ code: 200, desc: 'Success' }],
   },
   {
     method: 'POST',
     path: '/api/v1/categories',
     module: 'Categories',
-    summary: 'Tạo danh mục mới (FR-CAT-003) - Quyền Admin, tự động sinh slug tiếng Việt',
+    summary: 'Create new category (FR-CAT-003) - Requires Admin role, auto-generates slug',
     authRequired: true,
     requiredRole: 'Admin',
     requestSample: JSON.stringify(
       {
-        name: 'Món Chay Thanh Đạm',
-        description: 'Tổng hợp các món chay thanh tịnh tốt cho sức khỏe.',
+        name: 'Artisan Pastry & Baking',
+        description: 'French croissants, sourdough, and patisserie creations.',
         imageUrl: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80',
       },
       null,
@@ -157,31 +157,31 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
     responseSample: JSON.stringify(
       {
         id: 'cat-9b2f44',
-        name: 'Món Chay Thanh Đạm',
-        slug: 'mon-chay-thanh-dam',
-        description: 'Tổng hợp các món chay thanh tịnh tốt cho sức khỏe.',
+        name: 'Artisan Pastry & Baking',
+        slug: 'artisan-pastry-and-baking',
+        description: 'French croissants, sourdough, and patisserie creations.',
         recipeCount: 0,
       },
       null,
       2
     ),
     statusCodes: [
-      { code: 201, desc: 'Tạo thành công, cache invalidated' },
-      { code: 403, desc: 'Forbidden - Chỉ Admin mới có quyền' },
-      { code: 409, desc: 'CATEGORY_NAME_EXISTS - Tên danh mục đã tồn tại' },
+      { code: 201, desc: 'Category created successfully, cache invalidated' },
+      { code: 403, desc: 'Forbidden - Requires Admin role' },
+      { code: 409, desc: 'CATEGORY_NAME_EXISTS - Category name or slug already exists' },
     ],
   },
   {
     method: 'DELETE',
     path: '/api/v1/categories/{id}',
     module: 'Categories',
-    summary: 'Xóa danh mục (FR-CAT-005) - Soft constraint: không cho xóa nếu còn công thức',
+    summary: 'Delete category (FR-CAT-005) - Soft constraint: forbidden if recipes still attached',
     authRequired: true,
     requiredRole: 'Admin',
     responseSample: '{} (204 No Content)',
     statusCodes: [
-      { code: 204, desc: 'Xóa danh mục thành công' },
-      { code: 409, desc: 'CATEGORY_DELETE_HAS_RECIPES - Danh mục còn chứa công thức' },
+      { code: 204, desc: 'Category deleted successfully' },
+      { code: 409, desc: 'CATEGORY_DELETE_HAS_RECIPES - Category contains active recipes' },
       { code: 404, desc: 'CATEGORY_NOT_FOUND' },
     ],
   },
@@ -191,21 +191,21 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
     method: 'GET',
     path: '/api/v1/recipes',
     module: 'Recipes',
-    summary: 'Danh sách công thức phân trang, lọc & sắp xếp (FR-RCP-001)',
+    summary: 'Paginated recipe catalog with filters & sorting (FR-RCP-001)',
     authRequired: false,
     responseSample: JSON.stringify(
       {
         items: [
           {
             id: 'rcp-001',
-            title: 'Phở Bò Tái Lăn Hà Nội Chuẩn Vị',
-            slug: 'pho-bo-tai-lan-ha-noi-chuan-vi',
+            title: 'Authentic Hanoi Seared Beef Pho',
+            slug: 'authentic-hanoi-beef-pho',
             prepTime: 40,
             cookTime: 180,
             difficulty: 3,
             status: 1,
-            categoryName: 'Bún & Phở',
-            authorName: 'Nguyễn Văn Hùng',
+            categoryName: 'Noodles & Broths',
+            authorName: 'Chef Michael Nguyen',
           },
         ],
         totalCount: 6,
@@ -219,24 +219,24 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
       2
     ),
     statusCodes: [
-      { code: 200, desc: 'Thành công' },
-      { code: 422, desc: 'Tham số phân trang hoặc lọc không hợp lệ' },
+      { code: 200, desc: 'Success' },
+      { code: 422, desc: 'Invalid pagination or filter parameters' },
     ],
   },
   {
     method: 'GET',
     path: '/api/v1/recipes/search?q={keyword}',
     module: 'Recipes',
-    summary: 'Full-Text Search PostgreSQL tsvector + unaccent tiếng Việt (FR-SRCH-001)',
+    summary: 'PostgreSQL Full-Text Search with tsvector + unaccent + GIN indexing (FR-SRCH-001)',
     authRequired: false,
     responseSample: JSON.stringify(
       {
         items: [
           {
             id: 'rcp-001',
-            title: 'Phở Bò Tái Lăn Hà Nội Chuẩn Vị',
+            title: 'Authentic Hanoi Seared Beef Pho',
             relevanceScore: 85,
-            slug: 'pho-bo-tai-lan-ha-noi-chuan-vi',
+            slug: 'authentic-hanoi-beef-pho',
           },
         ],
         totalCount: 1,
@@ -245,59 +245,59 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
       2
     ),
     statusCodes: [
-      { code: 200, desc: 'Thành công' },
-      { code: 422, desc: 'Từ khóa tìm kiếm quá ngắn (< 2 ký tự)' },
+      { code: 200, desc: 'Success' },
+      { code: 422, desc: 'Search query too short (< 2 characters)' },
     ],
   },
   {
     method: 'GET',
     path: '/api/v1/recipes/{slug}',
     module: 'Recipes',
-    summary: 'Chi tiết công thức theo Slug (FR-RCP-002) - Eager loading steps, ingredients, nutrition, author',
+    summary: 'Get recipe detail by slug (FR-RCP-002) - Eager loading steps, ingredients, nutrition, author',
     authRequired: false,
     responseSample: JSON.stringify(
       {
         id: 'rcp-001',
-        title: 'Phở Bò Tái Lăn Hà Nội Chuẩn Vị',
-        slug: 'pho-bo-tai-lan-ha-noi-chuan-vi',
+        title: 'Authentic Hanoi Seared Beef Pho',
+        slug: 'authentic-hanoi-beef-pho',
         prepTime: 40,
         cookTime: 180,
         servings: 4,
         nutrition: { calories: 520, protein: 34, carbohydrates: 62, fat: 14 },
-        steps: [{ stepNumber: 1, title: 'Sơ chế xương bò', timerMinutes: 10 }],
-        ingredients: [{ name: 'Bánh phở tươi', quantity: 600, unit: 'gram' }],
+        steps: [{ stepNumber: 1, title: 'Blanch and prepare beef bones', timerMinutes: 10 }],
+        ingredients: [{ name: 'Fresh rice pho noodles', quantity: 600, unit: 'gram' }],
         rowVersion: 'AAAAAAAAB9A=',
       },
       null,
       2
     ),
     statusCodes: [
-      { code: 200, desc: 'Thành công' },
+      { code: 200, desc: 'Success' },
       { code: 404, desc: 'RECIPE_NOT_FOUND' },
-      { code: 403, desc: 'RECIPE_FORBIDDEN - Công thức Draft chỉ tác giả sở hữu hoặc Admin mới xem được' },
+      { code: 403, desc: 'RECIPE_FORBIDDEN - Draft recipes only accessible to author or Admin' },
     ],
   },
   {
     method: 'POST',
     path: '/api/v1/recipes',
     module: 'Recipes',
-    summary: 'Tạo công thức mới (FR-RCP-003) - Trạng thái mặc định Draft, auto slug, dispatch MediatR CreateRecipeCommand',
+    summary: 'Create new recipe (FR-RCP-003) - Default status Draft, auto slug, dispatch MediatR CreateRecipeCommand',
     authRequired: true,
     requiredRole: 'Author',
     requestSample: JSON.stringify(
       {
-        title: 'Bánh Cuốn Nóng Tráng Tay Hà Nội',
-        description: 'Bánh cuốn tráng mỏng mềm mướt cuộn nhân mộc nhĩ thịt nạc băm thơm ngậy hành phi.',
+        title: 'Fresh Rolled Steamed Rice Sheets',
+        description: 'Silky steamed rice crepes filled with seasoned minced pork and wood-ear mushrooms.',
         categoryId: 'cat-003',
         prepTime: 30,
         cookTime: 20,
         servings: 4,
         difficulty: 2,
         steps: [
-          { stepNumber: 1, title: 'Pha bột bánh', description: 'Trộn bột gạo tẻ và bột năng với nước và dầu ăn.' },
+          { stepNumber: 1, title: 'Prepare the batter', description: 'Whisk rice flour, tapioca starch, water, and oil until smooth.' },
         ],
         ingredients: [
-          { name: 'Bột gạo tẻ', quantity: 200, unit: 'gram' },
+          { name: 'Rice flour', quantity: 200, unit: 'gram' },
         ],
       },
       null,
@@ -306,15 +306,15 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
     responseSample: JSON.stringify(
       {
         id: 'rcp-72fa91',
-        title: 'Bánh Cuốn Nóng Tráng Tay Hà Nội',
-        slug: 'banh-cuon-nong-trang-tay-ha-noi',
+        title: 'Fresh Rolled Steamed Rice Sheets',
+        slug: 'fresh-rolled-steamed-rice-sheets',
         status: 0, // Draft
       },
       null,
       2
     ),
     statusCodes: [
-      { code: 201, desc: 'Tạo công thức thành công (Draft)' },
+      { code: 201, desc: 'Recipe created successfully (Draft status)' },
       { code: 401, desc: 'Unauthorized' },
       { code: 422, desc: 'VALIDATION_ERROR' },
     ],
@@ -323,14 +323,14 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
     method: 'PATCH',
     path: '/api/v1/recipes/{id}/publish',
     module: 'Recipes',
-    summary: 'Xuất bản công thức (FR-RCP-005) - Kiểm tra ít nhất 1 step & 1 ingredient',
+    summary: 'Publish recipe (FR-RCP-005) - Enforces business rule: at least 1 step & 1 ingredient',
     authRequired: true,
     requiredRole: 'Owner / Admin',
     responseSample: JSON.stringify({ status: 1, publishedAt: '2026-09-15T09:40:00Z' }, null, 2),
     statusCodes: [
-      { code: 200, desc: 'Xuất bản thành công' },
-      { code: 400, desc: 'RECIPE_PUBLISH_INCOMPLETE - Thiếu bước hoặc nguyên liệu' },
-      { code: 403, desc: 'RECIPE_FORBIDDEN - Không phải tác giả sở hữu hoặc Admin' },
+      { code: 200, desc: 'Published successfully' },
+      { code: 400, desc: 'RECIPE_PUBLISH_INCOMPLETE - Missing required steps or ingredients' },
+      { code: 403, desc: 'RECIPE_FORBIDDEN - Not the recipe owner or Admin' },
     ],
   },
 
@@ -339,7 +339,7 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
     method: 'GET',
     path: '/health',
     module: 'Health & System',
-    summary: 'Health check tổng thể (FR-OBS-001) - Kiểm tra PostgreSQL 16, Redis 7, MinIO S3',
+    summary: 'System health check (FR-OBS-001) - Verifies PostgreSQL 16, Redis 7, MinIO S3',
     authRequired: false,
     responseSample: JSON.stringify(
       {
@@ -364,7 +364,7 @@ export const API_ENDPOINTS: ApiEndpointDoc[] = [
 export const CSHARP_CLEAN_ARCHITECTURE_SNIPPETS = {
   domainRecipe: `// ==========================================
 // 1. DOMAIN LAYER: CulinaryBlog.Domain/Entities/Recipe.cs
-// Không phụ thuộc bất kỳ NuGet package nào ngoài .NET BCL
+// Zero third-party dependencies outside of .NET BCL
 // ==========================================
 namespace CulinaryBlog.Domain.Entities;
 
@@ -387,7 +387,7 @@ public class Recipe : BaseEntity
     public string AuthorId { get; private set; } = null!;
     public virtual ApplicationUser Author { get; private set; } = null!;
 
-    // Owned Entity (Cột trong bảng Recipes)
+    // Owned Entity (Columns embedded in Recipes table)
     public RecipeNutrition? Nutrition { get; private set; }
 
     // Collections
@@ -413,7 +413,7 @@ public class Recipe : BaseEntity
             CookTime = cookTime,
             Servings = servings,
             Difficulty = difficulty,
-            Status = RecipeStatus.Draft, // Mặc định Draft theo FR-RCP-003
+            Status = RecipeStatus.Draft, // Default is Draft according to FR-RCP-003
             CreatedAt = DateTime.UtcNow
         };
     }
@@ -421,7 +421,7 @@ public class Recipe : BaseEntity
     public void Publish()
     {
         if (!Steps.Any() || !Ingredients.Any())
-            throw new DomainException("Công thức phải có ít nhất 1 bước thực hiện và 1 nguyên liệu trước khi xuất bản.");
+            throw new DomainException("A recipe must have at least 1 step and 1 ingredient before publishing.");
 
         Status = RecipeStatus.Published;
         PublishedAt = DateTime.UtcNow;
@@ -431,7 +431,7 @@ public class Recipe : BaseEntity
 
   applicationMediatr: `// ==========================================
 // 2. APPLICATION LAYER: CulinaryBlog.Application/Features/Recipes/Commands/CreateRecipeCommand.cs
-// CQRS Pattern với MediatR + FluentValidation
+// CQRS Pattern with MediatR + FluentValidation
 // ==========================================
 namespace CulinaryBlog.Application.Features.Recipes.Commands;
 
@@ -476,7 +476,7 @@ public class CreateRecipeCommandHandler : IRequestHandler<CreateRecipeCommand, R
     public async Task<RecipeDto> Handle(CreateRecipeCommand request, CancellationToken ct)
     {
         var category = await _unitOfWork.Categories.GetByIdAsync(request.CategoryId, ct)
-            ?? throw new NotFoundException($"Danh mục {request.CategoryId} không tồn tại.");
+            ?? throw new NotFoundException($"Category {request.CategoryId} not found.");
 
         var recipe = Recipe.Create(
             request.Title, request.Description, request.CategoryId,
@@ -486,7 +486,7 @@ public class CreateRecipeCommandHandler : IRequestHandler<CreateRecipeCommand, R
         await _unitOfWork.Recipes.AddAsync(recipe, ct);
         await _unitOfWork.SaveChangesAsync(ct);
 
-        // Kích hoạt background job Hangfire để xử lý ảnh & index
+        // Trigger asynchronous Hangfire background job to generate thumbnails and index
         _backgroundJobs.Enqueue<IFileStorageService>(s => s.OptimizeRecipeAssetsAsync(recipe.Id));
 
         return recipe.ToDto();
@@ -495,7 +495,7 @@ public class CreateRecipeCommandHandler : IRequestHandler<CreateRecipeCommand, R
 
   presentationMinimalApi: `// ==========================================
 // 3. PRESENTATION LAYER: CulinaryBlog.API/Endpoints/RecipesEndpoints.cs
-// ASP.NET 10 Core Minimal APIs với MapGroup & TypedResults
+// ASP.NET 10 Core Minimal APIs with MapGroup & TypedResults
 // ==========================================
 namespace CulinaryBlog.API.Endpoints;
 
@@ -556,16 +556,16 @@ public static class RecipesEndpoints
 }`,
 
   postgresSchemaDdl: `-- =========================================================
--- 4. DATABASE: PostgreSQL 16 Schema với DDL, tsvector & triggers
+-- 4. DATABASE: PostgreSQL 16 Schema with DDL, tsvector & triggers
 -- Database: culinary_blog_db (PostgreSQL 16)
 -- =========================================================
 
--- Kích hoạt extensions bắt buộc theo CONS-006 & FR-SRCH-001
+-- Enable required extensions according to CONS-006 & FR-SRCH-001
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "unaccent";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
--- Bảng Danh mục (Categories)
+-- Categories Table
 CREATE TABLE "Categories" (
     "Id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "Name" VARCHAR(100) NOT NULL,
@@ -580,7 +580,7 @@ CREATE TABLE "Categories" (
 );
 CREATE UNIQUE INDEX "IDX_Category_Slug" ON "Categories"("Slug") WHERE "IsDeleted" = FALSE;
 
--- Bảng Công thức (Recipes) với Owned Entity Nutrition & tsvector
+-- Recipes Table with Owned Entity Nutrition & tsvector
 CREATE TABLE "Recipes" (
     "Id" UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     "Title" VARCHAR(200) NOT NULL,
@@ -596,7 +596,7 @@ CREATE TABLE "Recipes" (
     "CategoryId" UUID NOT NULL REFERENCES "Categories"("Id") ON DELETE RESTRICT,
     "AuthorId" VARCHAR(450) NOT NULL REFERENCES "AspNetUsers"("Id"),
     
-    -- Owned Entity: RecipeNutrition (nhúng trực tiếp)
+    -- Owned Entity: RecipeNutrition (embedded columns)
     "Nutrition_Calories" DECIMAL(8,2) NULL,
     "Nutrition_Protein" DECIMAL(8,2) NULL,
     "Nutrition_Carbohydrates" DECIMAL(8,2) NULL,
@@ -613,18 +613,18 @@ CREATE TABLE "Recipes" (
     "RowVersion" BYTEA NOT NULL
 );
 
--- Chỉ mục Full-Text Search GIN
+-- Full-Text Search GIN Index
 CREATE INDEX "IDX_Recipe_Search" ON "Recipes" USING GIN("SearchVector");
 CREATE INDEX "IDX_Recipe_Slug" ON "Recipes"("Slug") WHERE "IsDeleted" = FALSE;
 CREATE INDEX "IDX_Recipe_CategoryId" ON "Recipes"("CategoryId");
 CREATE INDEX "IDX_Recipe_AuthorId" ON "Recipes"("AuthorId");
 
--- PostgreSQL Trigger tự động cập nhật SearchVector bằng unaccent tiếng Việt
+-- PostgreSQL Trigger automatically updates SearchVector using unaccent
 CREATE OR REPLACE FUNCTION recipes_search_vector_trigger() RETURNS trigger AS $$
 BEGIN
   new."SearchVector" :=
-     setweight(to_tsvector('vietnamese', unaccent(coalesce(new."Title", ''))), 'A') ||
-     setweight(to_tsvector('vietnamese', unaccent(coalesce(new."Description", ''))), 'B');
+     setweight(to_tsvector('english', unaccent(coalesce(new."Title", ''))), 'A') ||
+     setweight(to_tsvector('english', unaccent(coalesce(new."Description", ''))), 'B');
   return new;
 END
 $$ LANGUAGE plpgsql;

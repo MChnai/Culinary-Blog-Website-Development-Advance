@@ -21,14 +21,14 @@ export const SystemMonitor: React.FC = () => {
           'SitemapGenerationJob (FR-JOB-003)',
           'Recurring',
           'Admin manually triggered Hangfire dashboard',
-          'Đã cập nhật sitemap.xml với danh sách recipes mới nhất.'
+          'Updated sitemap.xml with the latest published recipes.'
         );
       } else if (jobName.includes('Image')) {
         db.enqueueJob(
           'ImageResizeJob (FR-JOB-002)',
           'Fire-and-forget',
           'Manual batch optimization',
-          'Kiểm tra và sinh thumbnail 300x300 cho tất cả hình ảnh.'
+          'Verified and generated 300x300 thumbnails for all images.'
         );
       }
       refreshData();
@@ -46,10 +46,10 @@ export const SystemMonitor: React.FC = () => {
           </div>
           <div>
             <h1 className="text-2xl font-bold font-serif text-stone-900">
-              Quan sát Hệ thống & Hangfire Dashboard
+              System Observability & Hangfire Dashboard
             </h1>
             <p className="text-xs sm:text-sm text-stone-500">
-              Theo dõi Health Checks (FR-OBS-001), Background Jobs (FR-JOB) và Serilog Traces (FR-OBS-002)
+              Monitor Health Checks (FR-OBS-001), Background Jobs (FR-JOB), and Serilog Traces (FR-OBS-002)
             </p>
           </div>
         </div>
@@ -59,7 +59,7 @@ export const SystemMonitor: React.FC = () => {
           className="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer self-start md:self-auto"
         >
           <RefreshCw className="w-3.5 h-3.5" />
-          <span>Làm mới dữ liệu</span>
+          <span>Refresh Metrics</span>
         </button>
       </div>
 
@@ -76,7 +76,7 @@ export const SystemMonitor: React.FC = () => {
           </div>
           <h3 className="font-bold text-stone-900 text-base">PostgreSQL 16 RDBMS</h3>
           <p className="text-xs text-stone-600">
-            Cổng 5432 • Max 100 connections • Extensions: <code className="text-stone-800 font-mono">unaccent, pg_trgm</code> hoạt động bình thường.
+            Port 5432 • Max 100 connections • Extensions: <code className="text-stone-800 font-mono">unaccent, pg_trgm</code> operational.
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export const SystemMonitor: React.FC = () => {
           </div>
           <h3 className="font-bold text-stone-900 text-base">Redis 7 Cluster</h3>
           <p className="text-xs text-stone-600">
-            Cổng 6379 • Persistent AOF Mode • Output Cache policies: <code className="text-stone-800 font-mono">RecipeList, RecipeDetail</code>.
+            Port 6379 • Persistent AOF Mode • Output Cache policies: <code className="text-stone-800 font-mono">RecipeList, RecipeDetail</code>.
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export const SystemMonitor: React.FC = () => {
           </div>
           <h3 className="font-bold text-stone-900 text-base">MinIO Object Storage</h3>
           <p className="text-xs text-stone-600">
-            Cổng 9000 • Bucket: <code className="text-stone-800 font-mono">culinary-blog</code> • Public-read policy cho Recipe Images.
+            Port 9000 • Bucket: <code className="text-stone-800 font-mono">culinary-blog</code> • Public-read policy for Recipe Images.
           </p>
         </div>
       </div>
@@ -126,14 +126,14 @@ export const SystemMonitor: React.FC = () => {
               disabled={triggeringJob !== null}
               className="px-3 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-50"
             >
-              Chạy Sitemap Job
+              Run Sitemap Job
             </button>
             <button
               onClick={() => handleManualTrigger('ImageResizeJob')}
               disabled={triggeringJob !== null}
               className="px-3 py-1 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-50"
             >
-              Chạy Image Resize Job
+              Run Image Resize Job
             </button>
           </div>
         </div>
@@ -155,7 +155,7 @@ export const SystemMonitor: React.FC = () => {
               </div>
 
               <div className="text-right text-stone-400 font-mono text-[11px] shrink-0">
-                {new Date(job.createdAt).toLocaleTimeString('vi-VN')}
+                {new Date(job.createdAt).toLocaleTimeString('en-US')}
               </div>
             </div>
           ))}
@@ -178,7 +178,7 @@ export const SystemMonitor: React.FC = () => {
 
         <div className="max-h-72 overflow-y-auto space-y-2 pr-2">
           {logs.length === 0 ? (
-            <p className="text-stone-500 py-4 text-center">Chưa có log HTTP request nào.</p>
+            <p className="text-stone-500 py-4 text-center">No HTTP request logs captured yet.</p>
           ) : (
             logs.map(log => (
               <div

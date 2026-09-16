@@ -130,8 +130,8 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
     prepTime: `PT${recipe.prepTime}M`,
     cookTime: `PT${recipe.cookTime}M`,
     totalTime: `PT${recipe.prepTime + recipe.cookTime}M`,
-    recipeYield: `${servings} khẩu phần`,
-    recipeCategory: recipe.category?.name || 'Món ăn',
+    recipeYield: `${servings} servings`,
+    recipeCategory: recipe.category?.name || 'Main Course',
     recipeIngredient: recipe.ingredients.map(
       ing => `${ing.quantity ? Math.round(ing.quantity * scaleRatio * 10) / 10 : ''} ${ing.unit || ''} ${ing.name}`.trim()
     ),
@@ -172,10 +172,10 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
               }`}
             >
               {recipe.status === RecipeStatus.Published
-                ? 'Đã xuất bản'
+                ? 'Published'
                 : recipe.status === RecipeStatus.Draft
-                ? 'Bản thảo (Draft)'
-                : 'Lưu trữ (Archived)'}
+                ? 'Draft'
+                : 'Archived'}
             </span>
             <span className="text-xs font-mono text-stone-400">/{recipe.slug}</span>
           </div>
@@ -191,7 +191,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
             <button
               onClick={() => setShowJsonLd(!showJsonLd)}
               className="p-1.5 text-stone-500 hover:text-stone-800 hover:bg-stone-200 rounded-lg transition-colors cursor-pointer"
-              title="Xem Schema.org JSON-LD"
+              title="View Schema.org JSON-LD"
             >
               <Code className="w-4 h-4" />
             </button>
@@ -217,7 +217,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                   onClick={() => setShowJsonLd(false)}
                   className="text-xs text-stone-400 hover:text-white cursor-pointer"
                 >
-                  Đóng
+                  Close
                 </button>
               </div>
               <pre>{JSON.stringify(jsonLdData, null, 2)}</pre>
@@ -242,7 +242,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                   onClick={() => onEdit(recipe)}
                   className="px-3 py-1.5 bg-white hover:bg-stone-100 text-stone-700 border border-stone-300 rounded-lg text-xs font-semibold flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
                 >
-                  <Edit3 className="w-3.5 h-3.5 text-stone-600" /> Sửa
+                  <Edit3 className="w-3.5 h-3.5 text-stone-600" /> Edit
                 </button>
 
                 <button
@@ -254,10 +254,10 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                   }`}
                 >
                   {recipe.status === RecipeStatus.Published ? (
-                    <>Hủy xuất bản</>
+                    <>Unpublish</>
                   ) : (
                     <>
-                      <Eye className="w-3.5 h-3.5" /> Xuất bản (Publish)
+                      <Eye className="w-3.5 h-3.5" /> Publish
                     </>
                   )}
                 </button>
@@ -265,7 +265,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 <button
                   onClick={() => onArchiveToggle(recipe)}
                   className="p-1.5 text-stone-600 hover:text-stone-900 hover:bg-stone-200 rounded-lg transition-colors cursor-pointer"
-                  title="Lưu trữ (Archive/Unarchive)"
+                  title="Archive / Unarchive"
                 >
                   <Archive className="w-4 h-4" />
                 </button>
@@ -273,7 +273,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 <button
                   onClick={() => onDelete(recipe)}
                   className="p-1.5 text-rose-600 hover:text-rose-800 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                  title="Xóa công thức"
+                  title="Delete Recipe"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -288,8 +288,8 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Chuẩn bị</p>
-                <p className="text-sm font-semibold text-stone-900">{recipe.prepTime} phút</p>
+                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Prep Time</p>
+                <p className="text-sm font-semibold text-stone-900">{recipe.prepTime} mins</p>
               </div>
             </div>
 
@@ -298,8 +298,8 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 <Flame className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Nấu / Chế biến</p>
-                <p className="text-sm font-semibold text-stone-900">{recipe.cookTime} phút</p>
+                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Cook Time</p>
+                <p className="text-sm font-semibold text-stone-900">{recipe.cookTime} mins</p>
               </div>
             </div>
 
@@ -308,7 +308,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Khẩu phần</p>
+                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Servings</p>
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => setServings(Math.max(1, servings - 1))}
@@ -332,15 +332,15 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 <Tag className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Độ khó</p>
+                <p className="text-[11px] text-stone-500 uppercase tracking-wider font-medium">Difficulty</p>
                 <p className="text-sm font-semibold text-stone-900">
                   {recipe.difficulty === RecipeDifficulty.Easy
-                    ? 'Dễ làm'
+                    ? 'Easy'
                     : recipe.difficulty === RecipeDifficulty.Medium
-                    ? 'Trung bình'
+                    ? 'Medium'
                     : recipe.difficulty === RecipeDifficulty.Hard
-                    ? 'Nâng cao'
-                    : 'Chuyên nghiệp'}
+                    ? 'Hard'
+                    : 'Expert'}
                 </p>
               </div>
             </div>
@@ -374,7 +374,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                       />
                       {img.isPrimary && (
                         <span className="absolute bottom-0 inset-x-0 bg-amber-600 text-white text-[9px] font-bold text-center py-0.5">
-                          Ảnh chính
+                          Primary
                         </span>
                       )}
                     </div>
@@ -391,7 +391,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 <Clock className="w-6 h-6 text-amber-400" />
                 <div>
                   <p className="text-xs text-amber-200 uppercase font-semibold">
-                    Đang đếm giờ Bước {activeStepTimer}
+                    Active Timer for Step {activeStepTimer}
                   </p>
                   <p className="text-2xl font-mono font-bold">{formatTimer(timerSecondsLeft)}</p>
                 </div>
@@ -402,19 +402,19 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                   className="px-3 py-1.5 rounded-lg bg-amber-700 hover:bg-amber-600 text-xs font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   {isTimerRunning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                  {isTimerRunning ? 'Tạm dừng' : 'Tiếp tục'}
+                  {isTimerRunning ? 'Pause' : 'Resume'}
                 </button>
                 <button
                   onClick={() => resetTimer(recipe.steps.find(s => s.stepNumber === activeStepTimer)?.timerMinutes || 5)}
                   className="p-1.5 rounded-lg bg-amber-800 hover:bg-amber-700 text-xs cursor-pointer"
-                  title="Đặt lại"
+                  title="Reset"
                 >
                   <RotateCcw className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setActiveStepTimer(null)}
                   className="p-1.5 rounded-lg bg-amber-800 hover:bg-amber-700 text-xs cursor-pointer"
-                  title="Tắt đếm giờ"
+                  title="Dismiss Timer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -428,10 +428,10 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
             <div className="md:col-span-2 space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-bold font-serif text-stone-900">
-                  Nguyên liệu cần chuẩn bị
+                  Ingredients & Quantities
                 </h3>
                 <span className="text-xs text-stone-500 font-medium">
-                  {recipe.ingredients?.length || 0} mục (cho {servings} phần)
+                  {recipe.ingredients?.length || 0} items (for {servings} servings)
                 </span>
               </div>
 
@@ -482,11 +482,11 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
             {/* Nutrition Facts (1 col) */}
             <div className="space-y-3">
               <h3 className="text-lg font-bold font-serif text-stone-900">
-                Giá trị dinh dưỡng
+                Nutrition Facts
               </h3>
               <div className="bg-stone-900 text-stone-100 rounded-xl p-4 border border-stone-800 space-y-3">
                 <div className="border-b border-stone-800 pb-2">
-                  <p className="text-[10px] uppercase font-semibold text-stone-400 tracking-wider">Mỗi khẩu phần</p>
+                  <p className="text-[10px] uppercase font-semibold text-stone-400 tracking-wider">Per Serving</p>
                   <p className="text-2xl font-bold font-serif text-white">
                     {recipe.nutrition?.calories || 450}{' '}
                     <span className="text-xs font-sans font-normal text-stone-400">kcal</span>
@@ -495,31 +495,31 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
 
                 <div className="space-y-2 text-xs divide-y divide-stone-800">
                   <div className="pt-2 flex justify-between">
-                    <span className="text-stone-400">Chất đạm (Protein)</span>
+                    <span className="text-stone-400">Protein</span>
                     <span className="font-mono font-semibold text-white">
                       {recipe.nutrition?.protein || 28} g
                     </span>
                   </div>
                   <div className="pt-2 flex justify-between">
-                    <span className="text-stone-400">Tinh bột (Carbs)</span>
+                    <span className="text-stone-400">Carbohydrates</span>
                     <span className="font-mono font-semibold text-white">
                       {recipe.nutrition?.carbohydrates || 45} g
                     </span>
                   </div>
                   <div className="pt-2 flex justify-between">
-                    <span className="text-stone-400">Chất béo (Fat)</span>
+                    <span className="text-stone-400">Fat</span>
                     <span className="font-mono font-semibold text-white">
                       {recipe.nutrition?.fat || 16} g
                     </span>
                   </div>
                   <div className="pt-2 flex justify-between">
-                    <span className="text-stone-400">Chất xơ (Fiber)</span>
+                    <span className="text-stone-400">Dietary Fiber</span>
                     <span className="font-mono font-semibold text-white">
                       {recipe.nutrition?.fiber || 3} g
                     </span>
                   </div>
                   <div className="pt-2 flex justify-between">
-                    <span className="text-stone-400">Natri (Sodium)</span>
+                    <span className="text-stone-400">Sodium</span>
                     <span className="font-mono font-semibold text-white">
                       {recipe.nutrition?.sodium || 620} mg
                     </span>
@@ -532,7 +532,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
           {/* Steps & Instructions */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold font-serif text-stone-900">
-              Các bước thực hiện chi tiết
+              Step-by-Step Instructions
             </h3>
 
             <div className="space-y-4">
@@ -555,7 +555,7 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                           className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold border border-amber-200 transition-colors cursor-pointer"
                         >
                           <Clock className="w-3.5 h-3.5 text-amber-600" />
-                          <span>Hẹn giờ: {step.timerMinutes} phút</span>
+                          <span>Timer: {step.timerMinutes} mins</span>
                         </button>
                       )}
                     </div>
@@ -595,9 +595,9 @@ export const RecipeDetailModal: React.FC<RecipeDetailModalProps> = ({
                 </div>
               )}
               <div>
-                <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Công thức bởi tác giả</p>
+                <p className="text-xs text-stone-500 font-medium uppercase tracking-wider">Recipe by Author</p>
                 <p className="font-bold text-stone-900 text-base">{recipe.author.displayName}</p>
-                <p className="text-xs text-stone-600">{recipe.author.bio || 'Thành viên cộng đồng ẩm thực.'}</p>
+                <p className="text-xs text-stone-600">{recipe.author.bio || 'Member of the culinary community.'}</p>
               </div>
             </div>
           )}

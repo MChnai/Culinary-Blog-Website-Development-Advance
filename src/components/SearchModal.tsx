@@ -38,7 +38,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             autoFocus
             value={keyword}
             onChange={e => setKeyword(e.target.value)}
-            placeholder="Tìm kiếm công thức (thử gõ 'pho bo', 'bun cha', 'ca phe', 'thit kho')..."
+            placeholder="Search recipes (e.g. 'beef pho', 'spring roll', 'coffee', 'caramelized pork')..."
             className="flex-1 bg-transparent text-sm sm:text-base text-stone-900 placeholder-stone-400 focus:outline-hidden"
           />
           {keyword && (
@@ -61,7 +61,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         <div className="px-4 py-2.5 bg-amber-50/70 border-b border-amber-100 flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-1.5 text-amber-900 font-medium">
             <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            <span>PostgreSQL 16 tsvector + unaccent (tự động bỏ dấu tiếng Việt & xếp hạng ts_rank)</span>
+            <span>PostgreSQL 16 tsvector + unaccent (FTS rank ordering & accent-insensitive query)</span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -71,7 +71,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
               onChange={e => setSelectedCat(e.target.value)}
               className="text-xs bg-white border border-stone-300 rounded px-2 py-0.5"
             >
-              <option value="">Tất cả danh mục</option>
+              <option value="">All categories</option>
               {categories.map(c => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -85,9 +85,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         <div className="p-3 max-h-[60vh] overflow-y-auto divide-y divide-stone-100">
           {keyword.trim().length === 0 ? (
             <div className="py-8 text-center text-stone-400 text-xs">
-              <p>Gõ từ khóa có dấu hoặc không dấu để kích hoạt bộ máy Full-Text Search.</p>
+              <p>Type keywords to trigger the Full-Text Search indexing engine.</p>
               <div className="mt-3 flex flex-wrap justify-center gap-1.5">
-                {['phở', 'bún chả', 'gỏi cuốn', 'cà phê', 'thịt ba chỉ', 'đậu phộng'].map(hint => (
+                {['pho', 'pork belly', 'spring rolls', 'coffee', 'peanut dip', 'salad'].map(hint => (
                   <button
                     key={hint}
                     onClick={() => setKeyword(hint)}
@@ -100,7 +100,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             </div>
           ) : results.length === 0 ? (
             <div className="py-8 text-center text-stone-400 text-xs">
-              Không tìm thấy công thức nào phù hợp với từ khóa "{keyword}".
+              No recipes found matching keyword "{keyword}".
             </div>
           ) : (
             results.map(r => (
