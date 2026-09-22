@@ -36,6 +36,46 @@ export const ApiExplorer: React.FC = () => {
       } else if (selectedEndpoint.path.includes('/search')) {
         status = 200;
         result = db.searchRecipes('pho bo');
+      } else if (selectedEndpoint.path === '/api/v1/auth/register' && selectedEndpoint.method === 'POST') {
+        const parsed = JSON.parse(requestBody || '{}');
+        const res = db.register(parsed);
+        if (res.error) {
+          status = res.error.status;
+          result = res.error;
+        } else {
+          status = 201;
+          result = res.authResponse;
+        }
+      } else if (selectedEndpoint.path === '/api/v1/auth/login' && selectedEndpoint.method === 'POST') {
+        const parsed = JSON.parse(requestBody || '{}');
+        const res = db.login(parsed);
+        if (res.error) {
+          status = res.error.status;
+          result = res.error;
+        } else {
+          status = 200;
+          result = res.authResponse;
+        }
+      } else if (selectedEndpoint.path === '/api/v1/auth/google' && selectedEndpoint.method === 'POST') {
+        const parsed = JSON.parse(requestBody || '{}');
+        const res = db.googleLogin(parsed);
+        if (res.error) {
+          status = res.error.status;
+          result = res.error;
+        } else {
+          status = 200;
+          result = res.authResponse;
+        }
+      } else if (selectedEndpoint.path === '/api/v1/auth/refresh' && selectedEndpoint.method === 'POST') {
+        const parsed = JSON.parse(requestBody || '{}');
+        const res = db.refreshToken(parsed.refreshToken || '');
+        if (res.error) {
+          status = res.error.status;
+          result = res.error;
+        } else {
+          status = 200;
+          result = res.authResponse;
+        }
       } else if (selectedEndpoint.path === '/health') {
         status = 200;
         result = {

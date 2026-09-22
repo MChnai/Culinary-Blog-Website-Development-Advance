@@ -632,4 +632,141 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trg_recipes_update_search_vector
 BEFORE INSERT OR UPDATE ON "Recipes"
 FOR EACH ROW EXECUTE FUNCTION recipes_search_vector_trigger();`,
+
+  programMinimalApi: `// =========================================================
+// 5. ASP.NET 10 MINIMAL APIS: Program.cs (.NET 10.0 / C# 14)
+// =========================================================
+using System.Text;
+using CulinaryBlog.API.Endpoints;
+using CulinaryBlog.API.Middleware;
+using CulinaryBlog.Application;
+using CulinaryBlog.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// 1. Clean Architecture Layers Dependency Injection
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
+
+// 2. RFC 7807 Problem Details
+builder.Services.AddProblemDetails();
+
+// 3. OpenAPI 3.1 & Scalar Integration (.NET 10 Native OpenAPI)
+builder.Services.AddOpenApi();
+
+// 4. In-Memory Caching & Output Caching
+builder.Services.AddMemoryCache();
+
+// 5. JWT Authentication & Authorization
+var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "super-secret-key-that-is-at-least-32-chars-long-123456";
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "CulinaryBlog.API",
+            ValidAudience = builder.Configuration["Jwt:Audience"] ?? "CulinaryBlog.Client",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("AuthorOrAdmin", policy => policy.RequireRole("Admin", "Author"));
+});
+
+// 6. CORS for Frontend Client (Next.js / Vite)
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
+var app = builder.Build();
+
+// Configure Middleware Pipeline
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.WithTitle("Culinary Blog .NET 10 Minimal APIs")
+               .WithTheme(ScalarTheme.Moon)
+               .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+    });
+}
+
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Map Minimal APIs Route Groups
+var apiV1 = app.MapGroup("/api/v1");
+
+apiV1.MapGroup("/recipes").MapRecipeEndpoints().WithTags("Recipes");
+apiV1.MapGroup("/categories").MapCategoryEndpoints().WithTags("Categories");
+apiV1.MapGroup("/auth").MapAuthEndpoints().WithTags("Authentication");
+
+app.MapGet("/health", () => TypedResults.Ok(new
+{
+    status = "Healthy",
+    framework = ".NET 10.0 Minimal APIs",
+    database = "PostgreSQL 16",
+    timestamp = DateTime.UtcNow
+})).WithTags("System");
+
+app.Run();`,
+
+  dockerCompose: `# =========================================================
+# 6. DOCKER COMPOSE: ASP.NET 10 & PostgreSQL 16
+# =========================================================
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: culinaryblog-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: culinaryblog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init_postgresql16_schema.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d culinaryblog"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: src/CulinaryBlog.API/Dockerfile
+    container_name: culinaryblog-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=culinaryblog;Username=postgres;Password=postgres;Include Error Detail=true"
+    ports:
+      - "5000:5000"
+
+volumes:
+  pgdata:`,
 };

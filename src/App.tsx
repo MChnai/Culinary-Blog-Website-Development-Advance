@@ -22,8 +22,9 @@ import { ApiExplorer } from './components/ApiExplorer';
 import { ArchitectureViewer } from './components/ArchitectureViewer';
 import { SystemMonitor } from './components/SystemMonitor';
 import { Dashboard } from './components/Dashboard';
+import { AuthModal } from './components/AuthModal';
 import { db } from './lib/storage';
-import { Recipe, Category, ApplicationUser, UserRole, RecipeDifficulty, RecipeStatus } from './types';
+import { Recipe, Category, ApplicationUser, UserRole, RecipeDifficulty, RecipeStatus, AuthResponseDto } from './types';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'explore' | 'dashboard' | 'api' | 'architecture' | 'monitor'>('explore');
@@ -47,6 +48,8 @@ export default function App() {
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [isCategoryManagerOpen, setIsCategoryManagerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'register' | 'tokens'>('login');
 
   // Toast notification
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -215,6 +218,10 @@ export default function App() {
         }}
         onOpenSearch={() => setIsSearchOpen(true)}
         searchTerm=""
+        onOpenAuth={tab => {
+          setAuthModalTab(tab || 'login');
+          setIsAuthModalOpen(true);
+        }}
       />
 
       {/* Main Body Content based on Active Tab */}
@@ -602,6 +609,25 @@ export default function App() {
           onSelectRecipe={r => setSelectedRecipe(r)}
         />
       )}
+
+      {/* FR-AUTH: Authentication & Token Rotation Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        initialTab={authModalTab}
+        currentUser={currentUser}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthSuccess={(user, authResponse) => {
+          setCurrentUser(user);
+          showToast(`Authenticated as ${user.displayName} (Token Exp: 15m)`);
+          loadData();
+        }}
+        onLogout={() => {
+          db.switchUserRole('Guest');
+          setCurrentUser(null);
+          showToast('Signed out of session');
+          loadData();
+        }}
+      />
     </div>
   );
 }

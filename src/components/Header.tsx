@@ -10,6 +10,7 @@ interface HeaderProps {
   onOpenNewRecipe: () => void;
   onOpenSearch: () => void;
   searchTerm: string;
+  onOpenAuth: (tab?: 'login' | 'register' | 'tokens') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSwitchRole,
   onOpenNewRecipe,
   onOpenSearch,
+  onOpenAuth,
 }) => {
   const currentRole: UserRole = currentUser ? (currentUser.roles.includes('Admin') ? 'Admin' : 'Author') : 'Guest';
 
@@ -190,6 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
 
           {/* Action Button: Create Recipe */}
+          {/* Action Buttons: FR-AUTH & Create Recipe */}
           <div className="flex items-center gap-2">
             <button
               onClick={onOpenSearch}
@@ -197,6 +200,19 @@ export const Header: React.FC<HeaderProps> = ({
               title="Search"
             >
               <Search className="w-5 h-5" />
+            </button>
+
+            {/* FR-AUTH Module Trigger */}
+            <button
+              onClick={() => onOpenAuth()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 hover:bg-stone-100 text-stone-700 text-xs font-semibold transition-colors cursor-pointer"
+              title="FR-AUTH: User Management & Token Rotation"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+              <span>{currentUser ? currentUser.displayName.split(' ')[0] : 'Sign In'}</span>
+              <span className="hidden lg:inline text-[10px] font-mono px-1 rounded bg-stone-200 text-stone-600">
+                FR-AUTH
+              </span>
             </button>
 
             {currentRole !== 'Guest' ? (
@@ -209,10 +225,10 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             ) : (
               <button
-                onClick={() => onSwitchRole('Author')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-600 text-amber-700 hover:bg-amber-50 text-xs font-semibold transition-colors cursor-pointer"
+                onClick={() => onOpenAuth('login')}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition-colors cursor-pointer"
               >
-                Sign In as Author
+                Sign In
               </button>
             )}
           </div>

@@ -1,0 +1,40 @@
+services:
+  # PostgreSQL 16 DBMS with Full-Text Search and unaccent
+  postgres:
+    image: postgres:16-alpine
+    container_name: culinaryblog-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: culinaryblog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init_postgresql16_schema.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      - ./scripts/02_seed_data.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d culinaryblog"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ASP.NET 10 Core Minimal APIs Backend Service
+  api:
+    build:
+      context: .
+      dockerfile: src/CulinaryBlog.API/Dockerfile
+    container_name: culinaryblog-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=culinaryblog;Username=postgres;Password=postgres;Include Error Detail=true"
+    ports:
+      - "5000:5000"
+
+volumes:
+  pgdata:

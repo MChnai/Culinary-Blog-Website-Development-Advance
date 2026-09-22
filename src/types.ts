@@ -23,6 +23,9 @@ export interface ApplicationUser {
   isActive: boolean;
   emailConfirmed: boolean;
   roles: UserRole[];
+  isDeleted?: boolean;
+  accessFailedCount?: number;
+  lockoutEnd?: string;
   createdAt: string;
 }
 
@@ -95,6 +98,10 @@ export interface Recipe {
   authorId: string;
   author?: ApplicationUser;
   publishedAt?: string;
+  viewCount?: number;
+  ratingAverage?: number;
+  ratingCount?: number;
+  notes?: string;
   nutrition?: RecipeNutrition;
   steps: RecipeStep[];
   ingredients: RecipeIngredient[];
@@ -103,7 +110,7 @@ export interface Recipe {
   createdAt: string;
   updatedAt?: string;
   isDeleted: boolean;
-  rowVersion: string; // concurrency token
+  rowVersion?: string; // concurrency token
 }
 
 export interface PagedResult<T> {
@@ -148,4 +155,48 @@ export interface SystemLogEntry {
   elapsedMs: number;
   userId?: string;
   message: string;
+}
+
+export interface UserDto {
+  id: string;
+  fullName: string;
+  email: string;
+  userName: string;
+  avatarUrl?: string;
+  roles: string[];
+}
+
+export interface AuthResponseDto {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string;
+  user: UserDto;
+}
+
+export interface RefreshTokenRecord {
+  id: string;
+  userId: string;
+  token: string;
+  expiresAt: string;
+  isRevoked: boolean;
+  revokedAt?: string;
+  replacedByToken?: string;
+  createdByIp: string;
+  createdAt: string;
+}
+
+export interface UserProfileDto {
+  id: string;
+  fullName: string;
+  email: string;
+  userName: string;
+  avatarUrl?: string | null;
+  roles: string[];
+  emailConfirmed: boolean;
+  createdAt: string;
+}
+
+export interface UpdateProfileRequestDto {
+  fullName?: string;
+  avatarUrl?: string;
 }

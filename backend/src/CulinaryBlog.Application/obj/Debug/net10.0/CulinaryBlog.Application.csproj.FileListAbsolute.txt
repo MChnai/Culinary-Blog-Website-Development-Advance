@@ -1,0 +1,15 @@
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/CulinaryBlog.Application.csproj.AssemblyReference.cache
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/CulinaryBlog.Application.GeneratedMSBuildEditorConfig.editorconfig
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/CulinaryBlog.Application.AssemblyInfoInputs.cache
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/CulinaryBlog.Application.AssemblyInfo.cs
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/CulinaryBlog.Application.csproj.CoreCompileInputs.cache
+/app/applet/backend/src/CulinaryBlog.Application/bin/Debug/net10.0/CulinaryBlog.Application.deps.json
+/app/applet/backend/src/CulinaryBlog.Application/bin/Debug/net10.0/CulinaryBlog.Application.dll
+/app/applet/backend/src/CulinaryBlog.Application/bin/Debug/net10.0/CulinaryBlog.Application.pdb
+/app/applet/backend/src/CulinaryBlog.Application/bin/Debug/net10.0/CulinaryBlog.Domain.dll
+/app/applet/backend/src/CulinaryBlog.Application/bin/Debug/net10.0/CulinaryBlog.Domain.pdb
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/Culinary.995F3C4F.Up2Date
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/CulinaryBlog.Application.dll
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/refint/CulinaryBlog.Application.dll
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/CulinaryBlog.Application.pdb
+/app/applet/backend/src/CulinaryBlog.Application/obj/Debug/net10.0/ref/CulinaryBlog.Application.dll
